@@ -24,6 +24,42 @@
  * */
 export function calcTileType(index, boardSize) {
   // TODO: ваш код будет тут
+  const generateMatrix = (boardSize) => {
+    let matrix = []
+    for (let i = 0; i < boardSize; i++) {
+      for (let j = 0; j < boardSize; j++) {
+        matrix.push([i, j])
+      }
+    }
+    return matrix
+  }
+  const matrix = generateMatrix(boardSize);
+  let [x, y] = matrix[index];
+  if ((x == 0) && (y == 0)) {
+    return 'top-left';
+  }
+  if ((x == 0) && (y == (boardSize - 1))) {
+    return 'top-right';
+  }
+  if ((x == (boardSize - 1)) && (y == 0)) {
+    return 'bottom-left';
+  }
+  if ((x == (boardSize - 1)) && (y == (boardSize - 1))) {
+    return 'bottom-right';
+  }
+  if (x == (boardSize - 1)) {
+    return 'bottom';
+  }
+  if (x == 0) {
+    return 'top';
+  }
+  if (y == (boardSize - 1)) {
+
+    return 'right';
+  }
+  if (y == 0) {
+    return 'left';
+  }
   return 'center';
 }
 
