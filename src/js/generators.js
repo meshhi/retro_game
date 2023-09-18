@@ -10,6 +10,12 @@
  */
 export function* characterGenerator(allowedTypes, maxLevel) {
   // TODO: write logic here
+  while (true) {
+    let index = Math.floor(Math.random() * allowedTypes.length);
+    let currentType = allowedTypes[index];
+    let currentInstance = new currentType(Math.floor(Math.random() * (maxLevel - 1) + 1));
+    yield currentInstance;
+  }
 }
 
 /**
