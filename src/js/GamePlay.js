@@ -1,4 +1,5 @@
 import { calcHealthLevel, calcTileType } from './utils';
+import { generateTeam } from './generators';
 
 export default class GamePlay {
   constructor() {
