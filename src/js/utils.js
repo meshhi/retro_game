@@ -24,15 +24,6 @@
  * */
 export function calcTileType(index, boardSize) {
   // TODO: ваш код будет тут
-  const generateMatrix = (boardSize) => {
-    let matrix = []
-    for (let i = 0; i < boardSize; i++) {
-      for (let j = 0; j < boardSize; j++) {
-        matrix.push([i, j])
-      }
-    }
-    return matrix
-  }
   const matrix = generateMatrix(boardSize);
   let [x, y] = matrix[index];
   if ((x == 0) && (y == 0)) {
@@ -73,4 +64,14 @@ export function calcHealthLevel(health) {
   }
 
   return 'high';
+}
+
+export const generateMatrix = (boardSize) => {
+  let matrix = []
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      matrix.push([i, j])
+    }
+  }
+  return matrix
 }
