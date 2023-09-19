@@ -5,6 +5,8 @@ import { Bowman } from './characters/Bowman.js';
 import { Magician } from './characters/Magician.js';
 import { Swordsman } from './characters/Swordsman.js';
 import { Daemon } from './characters/Daemon.js';
+import { Undead } from './characters/Undead.js';
+import { Vampire } from './characters/Vampire.js';
 
 import PositionedCharacter from './PositionedCharacter';
 import { generateMatrix } from './utils';
@@ -36,8 +38,8 @@ export default class GameController {
     const [indexTeamA, indexTeamB] = getTeamIndixes();
 
     const generatePositionedTeams = () => {
-      const teamA = generateTeam([Bowman, Magician], 4, 5).characters;
-      const teamB = generateTeam([Swordsman, Daemon], 4, 5).characters;
+      const teamA = generateTeam([Bowman, Magician, Swordsman], 4, 10).characters;
+      const teamB = generateTeam([Daemon, Undead, Vampire], 4, 10).characters;
 
       const positionedTeamA = [];
       for (let item of teamA) {
@@ -65,17 +67,23 @@ export default class GameController {
     this.gamePlay.drawUi(themes.prairie);
     this.initNewGame();
     this.gamePlay.addNewGameListener(this.initNewGame);
+    this.gamePlay.addCellEnterListener(this.onCellEnter);
+    this.gamePlay.addCellLeaveListener(this.onCellLeave);
   }
 
-  onCellClick(index) {
+  onCellClick = (index) => {
     // TODO: react to click
   }
 
-  onCellEnter(index) {
+  onCellEnter = (index) => {
     // TODO: react to mouse enter
+
+    this.gamePlay.showCellTooltip('fgddg', index);
+    
   }
 
-  onCellLeave(index) {
+  onCellLeave = (index) => {
     // TODO: react to mouse leave
+    this.gamePlay.hideCellTooltip(index);
   }
 }

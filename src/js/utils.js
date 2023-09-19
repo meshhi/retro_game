@@ -75,3 +75,12 @@ export const generateMatrix = (boardSize) => {
   }
   return matrix
 }
+
+export const generateTooltip = () => {
+  const tooltip = document.createElement('div');
+  tooltip.classList.add('tooltip');
+  const tooltipContent = document.createElement('div');
+  tooltipContent.classList.add('tooltip_content');
+  tooltip.appendChild(tooltipContent);
+  return tooltip
+}

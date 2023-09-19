@@ -1,4 +1,4 @@
-import { calcHealthLevel, calcTileType } from './utils';
+import { calcHealthLevel, calcTileType, generateTooltip } from './utils';
 import { generateTeam } from './generators';
 
 export default class GamePlay {
@@ -197,12 +197,44 @@ export default class GamePlay {
       .filter(o => o.startsWith('selected')));
   }
 
+  mouseMover = (event) => {
+    const localX = event.clientX - event.target.offsetLeft;
+    const localY = event.clientY - event.target.offsetTop;
+    this.tooltip.style.left = localX;
+    this.tooltip.style.top = localY;
+  }
+
   showCellTooltip(message, index) {
-    this.cells[index].title = message;
+    if (!this.tooltip) {
+      this.tooltip = generateTooltip();
+      document.querySelector('body').appendChild(this.tooltip);
+    }
+    if (this.cells[index].querySelector('.character')) {
+      this.cells[index].title = message;
+      this.tooltip.querySelector('.tooltip_content').innerHTML = message;
+      this.tooltip.style.left = Math.floor(Math.random() * 199) + 'px';
+      this.tooltip.style.top = Math.floor(Math.random() * 199) + 'px';
+    }
+
+    // this.cells[index].appendChild(this.tooltip);
+    // try {
+    //   this.cells[index].removeEventListener('mousemove', this.mouseMover);
+    // } catch(e) {
+
+    // }
+    // this.cells[index].addEventListener('mousemove', this.mouseMover);
   }
 
   hideCellTooltip(index) {
     this.cells[index].title = '';
+    // try {
+    //   this.cells[index].removeEventListener('mousemove', this.mouseMover);
+    // } catch(e) {
+
+    // }
+    // if (this.cells[index].querySelector('.tooltip') !== null) { 
+    //   this.cells[index].removeChild(this.cells[index].querySelector('.tooltip'));
+    // }
   }
   
   showDamage(index, damage) {

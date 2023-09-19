@@ -252,3 +252,14 @@ body {
     font-size: 1.5rem;
   }
 }
+
+.tooltip {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: red;
+}
+
+.tooltip_content {
+
+}
