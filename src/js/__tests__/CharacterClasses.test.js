@@ -50,3 +50,14 @@ test('Daemon success', () => {
     console.log(daemon)
     expect(daemon instanceof Daemon).toBe(true);
 });
+
+test('Correct first level character', () => {
+    const vampire = new Vampire(1);
+    expect(vampire).toEqual({
+        level: 1,
+        attack: 25,
+        defence: 25,
+        health: 100,
+        type: 'vampire'
+      });
+});

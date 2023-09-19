@@ -34,13 +34,21 @@ test('Team max level', () => {
     expect(team.characters[0].level).not.toBe(maxLevel + 1);
 });
 
-test('Positioned character', () => {
-    const character = new Bowman(2);
-    const position = 8; // для поля 8x8 лучник будет находиться слева на второй строке
-    const positionedCharacter = new PositionedCharacter(character, position); 
-
-    expect(team.characters[0].level).not.toBe(maxLevel + 1);
+// Проверьте, выдаёт ли генератор characterGenerator бесконечно новые персонажи из списка (учёт аргумента allowedTypes)
+test('Character generator _ valid classes', () => {
+    expect(() => {
+        const playerClasses = [Vampire, Bowman];
+        const playerGenerator = characterGenerator(playerClasses, 10);
+        const characterList = [];
+        for (let i = 0; i < 10; i++) {
+            characterList.push(playerGenerator.next().value)
+        }
+        characterList.forEach(character => {
+            if (!playerClasses.includes(character.constructor)) {
+                throw new Error('This class is not allowed');
+            }
+        });
+    
+    }
+    ).not.toThrow('This class is not allowed');
 });
-
-
-
