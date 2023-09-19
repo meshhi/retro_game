@@ -6,9 +6,7 @@ import { Magician } from '../characters/Magician.js';
 import { characterGenerator } from '../generators.js';
 import { generateTeam } from '../generators.js';
 
-import PositionedCharacter from '../PositionedCharacter.js';
-
-test('Character generator', () => {
+test('Character generator: generate list of characters', () => {
     const playerGenerator = characterGenerator([Vampire, Bowman], 10);
     const characterList = [];
     for (let i = 0; i < 10; i++) {
@@ -18,14 +16,14 @@ test('Character generator', () => {
     expect(characterList.length).toBe(10);
 });
 
-test('Team generator', () => {
+test('Team generator: length', () => {
     const teamLen = 10;
     const maxLevel = 4;
     const team = generateTeam([Vampire, Bowman, Swordsman], maxLevel, teamLen);
     expect(team.characters.length).toBe(teamLen);
 });
 
-test('Team max level', () => {
+test('Team generator: team max level', () => {
     const teamLen = 4;
     const maxLevel = 3;
     const playerTypes = [Bowman, Swordsman, Magician]; // доступные классы игрока
@@ -35,7 +33,7 @@ test('Team max level', () => {
 });
 
 // Проверьте, выдаёт ли генератор characterGenerator бесконечно новые персонажи из списка (учёт аргумента allowedTypes)
-test('Character generator _ valid classes', () => {
+test('Character generator: valid classes', () => {
     expect(() => {
         const playerClasses = [Vampire, Bowman];
         const playerGenerator = characterGenerator(playerClasses, 10);

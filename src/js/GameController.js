@@ -62,8 +62,9 @@ export default class GameController {
   init() {
     // TODO: add event listeners to gamePlay events
     // TODO: load saved stated from stateService
-    this.gamePlay.drawUi(themes.prairie)
-    this.gamePlay.addNewGameListener(this.initNewGame)
+    this.gamePlay.drawUi(themes.prairie);
+    this.initNewGame();
+    this.gamePlay.addNewGameListener(this.initNewGame);
   }
 
   onCellClick(index) {
