@@ -77,7 +77,6 @@ export default class GameController {
 
   onCellEnter = (index) => {
     // TODO: react to mouse enter
-
     this.gamePlay.showCellTooltip('fgddg', index);
     
   }

@@ -62,6 +62,17 @@ export default class GamePlay {
     }
 
     this.cells = Array.from(this.boardEl.children);
+
+    if (!this.tooltip) {
+      this.tooltip = generateTooltip();
+      document.querySelector('body').appendChild(this.tooltip);
+    }
+    try {
+      document.querySelector('body').removeEventListener('mousemove', this.mouseMover);
+    } catch(e) {
+      console.log(e);
+    }
+    // document.querySelector('body').addEventListener('mousemove', this.mouseMover);
   }
 
   /**
@@ -148,12 +159,22 @@ export default class GamePlay {
 
   onCellEnter(event) {
     event.preventDefault();
+
+    // const localX = event.pageX;
+    // const localY = event.pageY;
+    // this.tooltip.style.left = `${localX}px`;
+    // this.tooltip.style.top = `${localY}px`;
+
     const index = this.cells.indexOf(event.currentTarget);
     this.cellEnterListeners.forEach(o => o.call(null, index));
   }
 
   onCellLeave(event) {
     event.preventDefault();
+    // CUSTOM
+    if (event.relatedTarget == this.tooltip) {
+      return;
+    }
     const index = this.cells.indexOf(event.currentTarget);
     this.cellLeaveListeners.forEach(o => o.call(null, index));
   }
@@ -198,43 +219,29 @@ export default class GamePlay {
   }
 
   mouseMover = (event) => {
-    const localX = event.clientX - event.target.offsetLeft;
-    const localY = event.clientY - event.target.offsetTop;
-    this.tooltip.style.left = localX;
-    this.tooltip.style.top = localY;
+    const localX = event.pageX;
+    const localY = event.pageY;
+    this.tooltip.style.left = `${localX}px`;
+    this.tooltip.style.top = `${localY}px`;
   }
 
   showCellTooltip(message, index) {
-    if (!this.tooltip) {
-      this.tooltip = generateTooltip();
-      document.querySelector('body').appendChild(this.tooltip);
-    }
     if (this.cells[index].querySelector('.character')) {
+      this.tooltip.style.display = 'block';
       this.cells[index].title = message;
-      this.tooltip.querySelector('.tooltip_content').innerHTML = message;
-      this.tooltip.style.left = Math.floor(Math.random() * 199) + 'px';
-      this.tooltip.style.top = Math.floor(Math.random() * 199) + 'px';
+
+      const localX = this.cells[index].offsetLeft;
+      const localY = this.cells[index].offsetTop;
+      this.tooltip.style.left = `${localX}px`;
+      this.tooltip.style.top = `${localY}px`;
     }
-
-    // this.cells[index].appendChild(this.tooltip);
-    // try {
-    //   this.cells[index].removeEventListener('mousemove', this.mouseMover);
-    // } catch(e) {
-
-    // }
-    // this.cells[index].addEventListener('mousemove', this.mouseMover);
   }
 
   hideCellTooltip(index) {
-    this.cells[index].title = '';
-    // try {
-    //   this.cells[index].removeEventListener('mousemove', this.mouseMover);
-    // } catch(e) {
 
-    // }
-    // if (this.cells[index].querySelector('.tooltip') !== null) { 
-    //   this.cells[index].removeChild(this.cells[index].querySelector('.tooltip'));
-    // }
+      this.tooltip.style.display = 'none';
+      this.cells[index].title = '';
+
   }
   
   showDamage(index, damage) {

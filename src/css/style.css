@@ -10,6 +10,11 @@ html, body {
 body {
   background: #000;
   font-size: 16px;
+  position: relative;
+}
+
+#game-container {
+  padding-top: 50px;
 }
 
 .btn {
@@ -29,7 +34,7 @@ body {
 
 .controls {
   text-align: center;
-  margin: 50px 0;
+  margin: 0 0 50px;
 }
 
 .board-container {
@@ -254,10 +259,12 @@ body {
 }
 
 .tooltip {
+  display: none;
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 8%;
+  height: 5%;
   background-color: red;
+  z-index: 99999;
 }
 
 .tooltip_content {
