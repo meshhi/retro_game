@@ -77,7 +77,10 @@ export default class GameController {
 
   onCellEnter = (index) => {
     // TODO: react to mouse enter
-    this.gamePlay.showCellTooltip('fgddg', index);
+    const currentCellCharacter = [...this.stateService.teams[0], ...this.stateService.teams[1]].find(item => item.position === index);
+    if (currentCellCharacter) {
+      this.gamePlay.showCellTooltip(`&#x1F396; ${currentCellCharacter.character.level} U+2694 ${10} U+1F6E1 ${40} U+2764 ${50}`, index);
+    }
     
   }
 

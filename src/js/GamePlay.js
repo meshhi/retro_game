@@ -160,11 +160,6 @@ export default class GamePlay {
   onCellEnter(event) {
     event.preventDefault();
 
-    // const localX = event.pageX;
-    // const localY = event.pageY;
-    // this.tooltip.style.left = `${localX}px`;
-    // this.tooltip.style.top = `${localY}px`;
-
     const index = this.cells.indexOf(event.currentTarget);
     this.cellEnterListeners.forEach(o => o.call(null, index));
   }
@@ -228,20 +223,21 @@ export default class GamePlay {
   showCellTooltip(message, index) {
     if (this.cells[index].querySelector('.character')) {
       this.tooltip.style.display = 'block';
-      this.cells[index].title = message;
-
+      
       const localX = this.cells[index].offsetLeft;
       const localY = this.cells[index].offsetTop;
       this.tooltip.style.left = `${localX}px`;
       this.tooltip.style.top = `${localY}px`;
     }
+
+    this.cells[index].title = message;
+    this.tooltip.children[0].innerHTML = message;
   }
 
   hideCellTooltip(index) {
-
-      this.tooltip.style.display = 'none';
-      this.cells[index].title = '';
-
+    this.tooltip.style.display = 'none';
+    this.cells[index].title = '';
+    this.tooltip.children[0].innerHTML = '';
   }
   
   showDamage(index, damage) {
