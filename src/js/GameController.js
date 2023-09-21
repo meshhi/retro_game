@@ -9,21 +9,23 @@ import { Undead } from './characters/Undead.js';
 import { Vampire } from './characters/Vampire.js';
 
 import PositionedCharacter from './PositionedCharacter';
-import { generateMatrix, getCharacteristics } from './utils';
+import { generateMatrix, getCharacteristics, determineValidMoves } from './utils';
 import GamePlay from './GamePlay';
 
 import cursors from './cursors.js';
+
 
 export default class GameController {
   constructor(gamePlay, stateService, state) {
     this.gamePlay = gamePlay;
     this.stateService = stateService;
     this.state = this.stateService.state;
+    this.boardMatrix = generateMatrix(this.gamePlay.boardSize);
   }
 
   initNewGame = () => {
     const getTeamIndixes = () => {
-      const matrix = generateMatrix(this.gamePlay.boardSize);
+      const matrix = this.boardMatrix;
       const leftColumns = [this.gamePlay.boardSize - this.gamePlay.boardSize, this.gamePlay.boardSize - this.gamePlay.boardSize + 1]
       const rightColumns = [this.gamePlay.boardSize - 2, this.gamePlay.boardSize - 1]
       const leftIndexes = []
@@ -179,6 +181,10 @@ export default class GameController {
         if ((this.state.selectedIndex !== index) && (this.state.currentTurn.player === currentCharacterTeam)) {
           this.gamePlay.removeCurrentCellStyle(index);
         }
+      }
+      const currentCellMove = determineValidMoves([...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === this.state.selectedIndex), index, this.boardMatrix);
+      if (!currentCellMove) {
+        this.gamePlay.setCursor(cursors.notallowed);
       }
       
       // this.gamePlay.showCellTooltip(getCharacteristics(currentCellCharacter), index);

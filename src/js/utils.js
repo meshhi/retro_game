@@ -88,3 +88,16 @@ export const generateTooltip = () => {
 export const getCharacteristics = (currentCellCharacter) => {
   return `🏅 ${currentCellCharacter.character.level} ⚔️ ${currentCellCharacter.character.attack} 🛡 ${currentCellCharacter.character.defence} ❤️ ${currentCellCharacter.character.health}`
 }
+
+export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix) => {
+  const selectedCoords = boardMatrix[selectedCharacter.position];
+  const hoveredCoords = boardMatrix[hoverCell];
+  let step = selectedCharacter.character.speed;
+  if (((selectedCoords[0] + step) <= hoveredCoords[0]) && ((selectedCoords[1] + step) <= hoveredCoords[1])) {
+
+  } else {
+    return false
+  }
+  console.log(selectedCharacter, hoverCell, boardMatrix);
+  return true;
+}
