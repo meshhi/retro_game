@@ -84,3 +84,7 @@ export const generateTooltip = () => {
   tooltip.appendChild(tooltipContent);
   return tooltip
 }
+
+export const getCharacteristics = (currentCellCharacter) => {
+  return `🏅 ${currentCellCharacter.character.level} ⚔️ ${currentCellCharacter.character.attack} 🛡 ${currentCellCharacter.character.defence} ❤️ ${currentCellCharacter.character.health}`
+}

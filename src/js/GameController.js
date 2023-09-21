@@ -9,7 +9,7 @@ import { Undead } from './characters/Undead.js';
 import { Vampire } from './characters/Vampire.js';
 
 import PositionedCharacter from './PositionedCharacter';
-import { generateMatrix } from './utils';
+import { generateMatrix, getCharacteristics } from './utils';
 
 export default class GameController {
   constructor(gamePlay, stateService) {
@@ -79,7 +79,7 @@ export default class GameController {
     // TODO: react to mouse enter
     const currentCellCharacter = [...this.stateService.teams[0], ...this.stateService.teams[1]].find(item => item.position === index);
     if (currentCellCharacter) {
-      this.gamePlay.showCellTooltip(`🏅 ${currentCellCharacter.character.level} ⚔️ ${currentCellCharacter.character.attack} 🛡 ${currentCellCharacter.character.defence} ❤️ ${currentCellCharacter.character.health}`, index);
+      this.gamePlay.showCellTooltip(getCharacteristics(currentCellCharacter), index);
     } else {
       this.gamePlay.hideCellTooltip(index);
     }
