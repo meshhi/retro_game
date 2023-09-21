@@ -24,4 +24,5 @@ export default class Character {
     this.type = type;
     // TODO: выбросите исключение, если кто-то использует "new Character()"
   }
+
 }

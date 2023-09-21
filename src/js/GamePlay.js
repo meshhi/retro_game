@@ -259,6 +259,52 @@ export default class GamePlay {
     this.boardEl.style.cursor = cursor;
   }
 
+  setCurrentCellStyle(index, styleType) {
+    if (styleType === 'go') {
+      this.cells[index].classList.add('selected');
+      this.cells[index].classList.add('selected-green');
+      const styleClearGreen = (e) => {
+        this.cells[index].classList.remove('selected');
+        this.cells[index].classList.remove('selected-green');
+        this.cells[index].removeEventListener('mouseleave', styleClearGreen);
+      }
+      this.cells[index].addEventListener('mouseleave', styleClearGreen);
+    }
+    if (styleType === 'attack') {
+      this.cells[index].classList.add('selected');
+      this.cells[index].classList.add('selected-red');
+      const styleClearRed = (e) => {
+        this.cells[index].classList.remove('selected');
+        this.cells[index].classList.remove('selected-red');
+        this.cells[index].removeEventListener('mouseleave', styleClearRed);
+      }
+      this.cells[index].addEventListener('mouseleave', styleClearRed);
+    }
+  }
+
+  removeCurrentCellStyle(index) {
+    try {
+      this.cells[index].classList.remove('selected');
+    } catch(e) {
+
+    }
+    try {
+      this.cells[index].classList.remove('selected-green');
+    } catch(e) {
+      
+    }
+    try {
+      this.cells[index].classList.remove('selected-yellow');
+    } catch(e) {
+      
+    }
+    try {
+      this.cells[index].classList.remove('selected-red');
+    } catch(e) {
+      
+    }
+  }
+
   checkBinding() {
     if (this.container === null) {
       throw new Error('GamePlay not bind to DOM');

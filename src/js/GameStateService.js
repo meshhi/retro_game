@@ -1,6 +1,9 @@
+import GameState from "./GameState";
+
 export default class GameStateService {
   constructor(storage) {
     this.storage = storage;
+    this.state = new GameState().state;
   }
 
   save(state) {

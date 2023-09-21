@@ -6,5 +6,6 @@ export class Vampire extends Character {
         this.attack = attack;
         this.defence = defence;
         this.health = health;
+        this.speed = 2;
     }
 }
