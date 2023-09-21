@@ -80,12 +80,14 @@ export default class GameController {
     const currentCellCharacter = [...this.stateService.teams[0], ...this.stateService.teams[1]].find(item => item.position === index);
     if (currentCellCharacter) {
       this.gamePlay.showCellTooltip(`🏅 ${currentCellCharacter.character.level} ⚔️ ${currentCellCharacter.character.attack} 🛡 ${currentCellCharacter.character.defence} ❤️ ${currentCellCharacter.character.health}`, index);
+    } else {
+      this.gamePlay.hideCellTooltip(index);
     }
     
   }
 
   onCellLeave = (index) => {
     // TODO: react to mouse leave
-    this.gamePlay.hideCellTooltip(index);
+    // this.gamePlay.hideCellTooltip(index);
   }
 }

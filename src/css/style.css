@@ -262,15 +262,19 @@ body {
   display: none;
   position: absolute;
   width: 8%;
-  height: 5%;
+  height: 2rem;
   z-index: 99999;
 }
 
 .tooltip_content {
+  padding: 0 .2rem;
   width: fit-content;
   white-space: nowrap;
   height: 100%;
   background-color: black;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   /* background-color: green; */
 }

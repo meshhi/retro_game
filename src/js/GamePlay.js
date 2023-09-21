@@ -72,7 +72,7 @@ export default class GamePlay {
     } catch(e) {
       console.log(e);
     }
-    // document.querySelector('body').addEventListener('mousemove', this.mouseMover);
+    document.querySelector('body').addEventListener('mousemove', this.mouseMover);
   }
 
   /**
@@ -216,8 +216,8 @@ export default class GamePlay {
   mouseMover = (event) => {
     const localX = event.pageX;
     const localY = event.pageY;
-    this.tooltip.style.left = `${localX}px`;
-    this.tooltip.style.top = `${localY}px`;
+    this.tooltip.style.left = `${localX + 10}px`;
+    this.tooltip.style.top = `${localY + 10}px`;
   }
 
   showCellTooltip(message, index) {
