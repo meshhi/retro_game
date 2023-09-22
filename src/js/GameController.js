@@ -184,7 +184,7 @@ export default class GameController {
       }
       const currentCellMove = determineValidMoves([...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === this.state.selectedIndex), index, this.boardMatrix);
       if (!currentCellMove) {
-        this.gamePlay.setCursor(cursors.notallowed);
+        this.gamePlay.setCursor(cursors.notallowed);  
       }
       
       // this.gamePlay.showCellTooltip(getCharacteristics(currentCellCharacter), index);

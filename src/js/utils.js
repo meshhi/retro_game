@@ -93,11 +93,28 @@ export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix) =
   const selectedCoords = boardMatrix[selectedCharacter.position];
   const hoveredCoords = boardMatrix[hoverCell];
   let step = selectedCharacter.character.speed;
-  if (((selectedCoords[0] + step) <= hoveredCoords[0]) && ((selectedCoords[1] + step) <= hoveredCoords[1])) {
+  let validCoords = [];
+  for (let i = selectedCoords[0]; i <= selectedCoords[0] + step; i += 1) {
+    validCoords.push([i, selectedCoords[1]]);
+  }
+  for (let i = selectedCoords[0]; i >= selectedCoords[0] - step; i -= 1) {
+    validCoords.push([i, selectedCoords[1]]);
+  }
 
+  for (let i = selectedCoords[1]; i <= selectedCoords[1] + step; i += 1) {
+    validCoords.push([selectedCoords[0], i]);
+  }
+  for (let i = selectedCoords[1]; i >= selectedCoords[1] - step; i -= 1) {
+    validCoords.push([selectedCoords[0], i]);
+  }
+  console.log(validCoords);
+  console.log(hoveredCoords);
+  console.log(validCoords.includes(hoveredCoords.toString()));
+
+  if (validCoords.find(item => item.toString() == hoveredCoords.toString())) {
+    console.log('valid move')
+    return true
   } else {
     return false
   }
-  console.log(selectedCharacter, hoverCell, boardMatrix);
-  return true;
 }
