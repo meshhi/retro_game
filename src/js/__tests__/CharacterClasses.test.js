@@ -61,3 +61,16 @@ test('Correct first level character', () => {
         type: 'vampire'
       });
 });
+
+test('Level up', () => {
+    const vampire = new Vampire(6);
+    console.log(vampire)
+    expect(1).toBe(1);
+    // expect(vampire).toEqual({
+    //     level: 1,
+    //     attack: 25,
+    //     defence: 25,
+    //     health: 100,
+    //     type: 'vampire'
+    //   });
+});

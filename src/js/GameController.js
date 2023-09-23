@@ -45,10 +45,8 @@ export default class GameController {
     const [indexTeamA, indexTeamB] = getTeamIndixes();
 
     const generatePositionedTeams = () => {
-      // const teamA = generateTeam([Bowman, Magician, Swordsman], 4, 2).characters;
-      // const teamB = generateTeam([Daemon, Undead, Vampire], 4, 2).characters;
-      const teamA = generateTeam([Swordsman], 4, 3).characters;
-      const teamB = generateTeam([Undead], 4, 1).characters;
+      const teamA = generateTeam([Swordsman, Magician, Bowman], 4, 5).characters;
+      const teamB = generateTeam([Undead, Vampire, Daemon], 4, 2).characters;
       const busyIndexes = [];
 
       const positionedTeamA = [];
@@ -113,8 +111,44 @@ export default class GameController {
     const [indexTeamA, indexTeamB] = getTeamIndixes();
 
     const updateStartPositions = () => {
+      const generatePositionedTeams = () => {
+        const teamA = generateTeam([Swordsman, Magician, Bowman], 4, 5).characters;
+        const teamB = generateTeam([Undead, Vampire, Daemon], 4, 2).characters;
+        const busyIndexes = [];
+  
+        const positionedTeamA = [];
+        for (let item of teamA) {
+          let currentIndex;
+          currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
+          if (busyIndexes.includes(currentIndex)) {
+              while(busyIndexes.includes(currentIndex)) {
+                currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
+              }
+          }
+          busyIndexes.push(currentIndex);
+          positionedTeamA.push(new PositionedCharacter(item, currentIndex))
+        }
+  
+        const positionedTeamB = [];
+        for (let item of teamB) {
+          let currentIndex;
+          currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
+  
+          if (busyIndexes.includes(currentIndex)) {
+            while(busyIndexes.includes(currentIndex)) {
+              currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
+  
+            }
+          }
+          busyIndexes.push(currentIndex);
+          positionedTeamB.push(new PositionedCharacter(item, currentIndex))
+        }
+        
+        return [positionedTeamA, positionedTeamB];
+      }
+      
       const teamA = this.state.teams['1'];
-      const teamB = this.state.teams['2'];
+      const teamB = generatePositionedTeams()[1];
       const busyIndexes = [];
 
       for (let item of teamA) {
@@ -127,7 +161,12 @@ export default class GameController {
         }
         busyIndexes.push(currentIndex);
         item.position = currentIndex;
-        item.character.health = 100;
+        if (item.character.health > 0) {
+          item.character.updateLevel();
+        }
+        if (item.character.health <= 0) {
+          item.position = -1;
+        }
       }
 
       for (let item of teamB) {
@@ -137,13 +176,15 @@ export default class GameController {
         if (busyIndexes.includes(currentIndex)) {
           while(busyIndexes.includes(currentIndex)) {
             currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
-
           }
         }
         busyIndexes.push(currentIndex);
         item.position = currentIndex;
-        item.character.health = 100;
+        if (item.character.health > 0) {
+          item.character.updateLevel();
+        }
       }
+      this.state.teams['2'] = teamB;
     }
     updateStartPositions();
 
@@ -177,7 +218,7 @@ export default class GameController {
   }
 
   onCellClick = (index) => {
-    console.log(this.state)
+    // console.log(this.state)
     // TODO: react to click
     const currentCellCharacter = [...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === index);
     let cellCharacterTeam = -1;
