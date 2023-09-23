@@ -17,12 +17,13 @@ import cursors from './cursors.js';
 
 
 export default class GameController {
-  constructor(gamePlay, stateService) {
+  constructor(gamePlay, stateService, bot) {
     this.gamePlay = gamePlay;
     this.stateService = stateService;
     this.state = this.stateService.state;
     this.state.themes = {};
     this.boardMatrix = generateMatrix(this.gamePlay.boardSize);
+    this.bot = bot;
   }
 
   initNewGame = () => {
@@ -214,6 +215,7 @@ export default class GameController {
     this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]); 
   
     GameState.gameStats.wins++;
+    document.querySelector('.win').textContent = `Wins: ${GameState.gameStats.wins}`;
   }
 
   gameOver = () => {
@@ -237,12 +239,16 @@ export default class GameController {
     this.gamePlay.addSaveGameListener(this.saveGame);
     this.gamePlay.addLoadGameListener(this.loadGame);
 
+    let winEl = document.createElement('div');
+    winEl.style.color  = 'white';
+    winEl.classList.add('win');
+    winEl.textContent = `Wins: ${GameState.gameStats.wins}`
+    document.querySelector('.controls').appendChild(winEl);
     
   }
 
   onCellClick = (index) => {
-    // console.log(this.state)
-    console.log(GameState.gameStats)
+    console.log(this.state)
     // TODO: react to click
     const currentCellCharacter = [...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === index);
     let cellCharacterTeam = -1;
@@ -285,6 +291,14 @@ export default class GameController {
         this.gamePlay.deselectCell(this.state.selectedIndex);
         this.state.selectedIndex = null;
         this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
+
+        if (this.state.currentTurn.player == 1) {
+          if (this.state.currentTurn.status === "select") {
+            console.log('bot after move')
+            this.bot.makeMove(this.state.currentTurn.player);
+            this.state.currentTurn.player = 0;
+          }
+        }
       }
       // attack
       if (this.gamePlay.cells[index].classList.contains('selected-red')) {
@@ -331,6 +345,14 @@ export default class GameController {
               this.gameOver();
             }
             document.querySelector('body').style.pointerEvents = 'auto';
+
+            if (this.state.currentTurn.player == 1) {
+              if (this.state.currentTurn.status === "select") {
+                console.log('bot after attack')
+                this.bot.makeMove();
+                this.state.currentTurn.player = 0;
+              }
+            }
           });
       }
       // another character in team
@@ -347,7 +369,9 @@ export default class GameController {
   onCellEnter = (index, indexFrom) => {
     // TODO: react to mouse enter
     if (this.state.currentTurn.status === "action") {
-      this.gamePlay.removeCurrentCellStyle(index);
+      if (this.state.selectedIndex !== index) {
+        this.gamePlay.removeCurrentCellStyle(index);
+      }
       this.gamePlay.setCursor(cursors.notallowed);
       const currentCellMove = determineValidMoves([...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === this.state.selectedIndex), index, this.boardMatrix);
       const currentCellAttack = determineValidAttacks([...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === this.state.selectedIndex), index, this.boardMatrix);
@@ -359,8 +383,10 @@ export default class GameController {
       if (hoverCharacter) {
         const currentCharacterTeam = determineCharacterTeam(this.state.teams["1"], this.state.teams["2"], hoverCharacter);
         if (this.state.currentTurn.player == currentCharacterTeam) {
-          this.gamePlay.setCurrentCellStyle(index, 'friendly');
-          this.gamePlay.setCursor(cursors.pointer);
+          // if (hoverCharacter.position !== this.state.selectedIndex) {
+            this.gamePlay.setCurrentCellStyle(index, 'friendly');
+            this.gamePlay.setCursor(cursors.pointer);
+          // }
         }
         if ((this.state.currentTurn.player !== currentCharacterTeam) && currentCellAttack) {
             this.gamePlay.setCurrentCellStyle(index, 'attack');
@@ -385,16 +411,14 @@ export default class GameController {
   saveGame = () => {
     // TODO: save game
     this.stateService.save(this.state);
-    console.log('saved')
-    console.log(this.state)
   }
 
   loadGame = () => {
     // TODO: load game
-    console.log('loaded')
-    console.log(this.state)
     this.state = this.stateService.load();
-
+    for (let index in this.boardMatrix) {
+      this.gamePlay.removeCurrentCellStyle(index);
+    }
     if (this.state.selectedIndex) {
       this.gamePlay.selectCell(this.state.selectedIndex);
     }
