@@ -6,6 +6,7 @@ export class Bowman extends Character {
         this.attack = attack;
         this.defence = defence;
         this.health = health;
-        this.speed = 4;
+        this.speed = 2;
+        this.attackRange = 2;
     }
 }

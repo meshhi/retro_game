@@ -107,14 +107,69 @@ export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix) =
   for (let i = selectedCoords[1]; i >= selectedCoords[1] - step; i -= 1) {
     validCoords.push([selectedCoords[0], i]);
   }
-  console.log(validCoords);
-  console.log(hoveredCoords);
-  console.log(validCoords.includes(hoveredCoords.toString()));
+
+  for (let i = 0; i <= step; i += 1) {
+    validCoords.push([selectedCoords[0] + i, selectedCoords[1] + i]);
+    validCoords.push([selectedCoords[0] + i, selectedCoords[1] - i]);
+    validCoords.push([selectedCoords[0] - step + i, selectedCoords[1] - step + i]);
+    validCoords.push([selectedCoords[0] - step + i, selectedCoords[1] + step - i]);
+  }
+
+  for (let i = selectedCoords[1]; i >= selectedCoords[1] - step; i -= 1) {
+    validCoords.push([selectedCoords[0], i]);
+  }
 
   if (validCoords.find(item => item.toString() == hoveredCoords.toString())) {
-    console.log('valid move')
     return true
   } else {
     return false
   }
+}
+
+export const determineValidAttacks = (selectedCharacter, hoverCell, boardMatrix) => {
+  const selectedCoords = boardMatrix[selectedCharacter.position];
+  const hoveredCoords = boardMatrix[hoverCell];
+  let step = selectedCharacter.character.attackRange;
+  let validCoords = [];
+  for (let i = selectedCoords[0]; i <= selectedCoords[0] + step; i += 1) {
+    validCoords.push([i, selectedCoords[1]]);
+  }
+  for (let i = selectedCoords[0]; i >= selectedCoords[0] - step; i -= 1) {
+    validCoords.push([i, selectedCoords[1]]);
+  }
+
+  for (let i = selectedCoords[1]; i <= selectedCoords[1] + step; i += 1) {
+    validCoords.push([selectedCoords[0], i]);
+  }
+  for (let i = selectedCoords[1]; i >= selectedCoords[1] - step; i -= 1) {
+    validCoords.push([selectedCoords[0], i]);
+  }
+
+  for (let i = 0; i <= step; i += 1) {
+    validCoords.push([selectedCoords[0] + i, selectedCoords[1] + i]);
+    validCoords.push([selectedCoords[0] + i, selectedCoords[1] - i]);
+    validCoords.push([selectedCoords[0] - step + i, selectedCoords[1] - step + i]);
+    validCoords.push([selectedCoords[0] - step + i, selectedCoords[1] + step - i]);
+  }
+
+  for (let i = selectedCoords[1]; i >= selectedCoords[1] - step; i -= 1) {
+    validCoords.push([selectedCoords[0], i]);
+  }
+
+  if (validCoords.find(item => item.toString() == hoveredCoords.toString())) {
+    return true
+  } else {
+    return false
+  }
+}
+
+export const determineCharacterTeam = (team1, team2, hoverCharacter) => {
+  let currentCharacterTeam = -1;
+  if (team1.includes(hoverCharacter)) {
+    currentCharacterTeam = 0;
+  }
+  if (team2.includes(hoverCharacter)) {
+    currentCharacterTeam = 1;
+  }
+  return currentCharacterTeam
 }

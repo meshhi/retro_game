@@ -161,7 +161,9 @@ export default class GamePlay {
     event.preventDefault();
 
     const index = this.cells.indexOf(event.currentTarget);
-    this.cellEnterListeners.forEach(o => o.call(null, index));
+    const indexFrom = this.cells.indexOf(event.relatedTarget);
+
+    this.cellEnterListeners.forEach(o => o.call(null, index, indexFrom));
   }
 
   onCellLeave(event) {
@@ -195,7 +197,8 @@ export default class GamePlay {
   }
 
   static showError(message) {
-    alert(message);
+    // alert(message);
+    console.warn(message);
   }
 
   static showMessage(message) {
@@ -249,7 +252,9 @@ export default class GamePlay {
       cell.appendChild(damageEl);
 
       damageEl.addEventListener('animationend', () => {
+        
         cell.removeChild(damageEl);
+        
         resolve();
       });
     });
@@ -280,6 +285,14 @@ export default class GamePlay {
       }
       this.cells[index].addEventListener('mouseleave', styleClearRed);
     }
+    if (styleType === 'friendly') {
+      this.cells[index].classList.add('friendly');
+      const styleClearFriendly = (e) => {
+        this.cells[index].classList.remove('friendly');
+        this.cells[index].removeEventListener('mouseleave', styleClearFriendly);
+      }
+      this.cells[index].addEventListener('mouseleave', styleClearFriendly);
+    }
   }
 
   removeCurrentCellStyle(index) {
@@ -300,6 +313,12 @@ export default class GamePlay {
     }
     try {
       this.cells[index].classList.remove('selected-red');
+    } catch(e) {
+      
+    }
+
+    try {
+      this.cells[index].classList.remove('friendly');
     } catch(e) {
       
     }

@@ -6,6 +6,7 @@ export class Undead extends Character {
         this.attack = attack;
         this.defence = defence;
         this.health = health;
-        this.speed = 2;
+        this.speed = 4;
+        this.attackRange = 1;
     }
 }

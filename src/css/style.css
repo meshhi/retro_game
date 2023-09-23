@@ -239,7 +239,7 @@ body {
   position: absolute;
   width: var(--cell-size);
   text-align: center;
-  z-index: 999;
+  z-index: 99999;
   color: #f00;
   font-weight: bold;
   animation: 500ms fade ease-out;
@@ -263,7 +263,7 @@ body {
   position: absolute;
   width: 8%;
   height: 2rem;
-  z-index: 99999;
+  z-index: 9999;
 }
 
 .tooltip_content {
