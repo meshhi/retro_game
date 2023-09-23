@@ -123,10 +123,15 @@ export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix, g
   }
 
   const hoveredCoords = boardMatrix[hoverCell];
-  if (validCoords.find(item => item.toString() == hoveredCoords.toString())) {
-    return true
-  } else {
-    return false
+  try {
+    if (validCoords.find(item => item.toString() == hoveredCoords.toString())) {
+      return true
+    } else {
+      return false
+    }
+
+  } catch (error) {
+    debugger
   }
 }
 

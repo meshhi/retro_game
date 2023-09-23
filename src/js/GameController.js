@@ -293,9 +293,7 @@ export default class GameController {
 
         if (this.state.currentTurn.player == 1) {
           if (this.state.currentTurn.status === "select") {
-            console.log('bot after move')
-            this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave);
-            this.state.currentTurn.player = 0;
+            this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave, this.gamePlay.removeCurrentCellStyle);
           }
         }
       }
@@ -347,9 +345,7 @@ export default class GameController {
 
             if (this.state.currentTurn.player == 1) {
               if (this.state.currentTurn.status === "select") {
-                console.log('bot after attack')
-                this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave);
-                this.state.currentTurn.player = 0;
+                this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave, this.gamePlay.removeCurrentCellStyle);
               }
             }
           });
@@ -382,10 +378,8 @@ export default class GameController {
       if (hoverCharacter) {
         const currentCharacterTeam = determineCharacterTeam(this.state.teams["1"], this.state.teams["2"], hoverCharacter);
         if (this.state.currentTurn.player == currentCharacterTeam) {
-          // if (hoverCharacter.position !== this.state.selectedIndex) {
             this.gamePlay.setCurrentCellStyle(index, 'friendly');
             this.gamePlay.setCursor(cursors.pointer);
-          // }
         }
         if ((this.state.currentTurn.player !== currentCharacterTeam) && currentCellAttack) {
             this.gamePlay.setCurrentCellStyle(index, 'attack');
