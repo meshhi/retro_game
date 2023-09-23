@@ -290,6 +290,7 @@ export default class GameController {
         this.gamePlay.deselectCell(this.state.selectedIndex);
         this.state.selectedIndex = null;
         this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
+        this.gamePlay.removeCurrentCellStyle(index);
 
         if (this.state.currentTurn.player == 1) {
           if (this.state.currentTurn.status === "select") {
@@ -299,6 +300,7 @@ export default class GameController {
       }
       // attack
       if (this.gamePlay.cells[index].classList.contains('selected-red')) {
+        document.querySelector('body').style.pointerEvents = 'none';
         let attack = 0;
         let defence = 0;
         let damage = 0; // Math.max(attacker.attack - target.defence, attacker.attack * 0.1)
@@ -327,7 +329,7 @@ export default class GameController {
           }
         }
 
-        document.querySelector('body').style.pointerEvents = 'none';
+        
         this.gamePlay.showDamage(index, damage)
           .then(res => {
             this.state.currentTurn.status = 'select';
