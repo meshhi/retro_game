@@ -17,7 +17,7 @@ import cursors from './cursors.js';
 
 
 export default class GameController {
-  constructor(gamePlay, stateService, state) {
+  constructor(gamePlay, stateService) {
     this.gamePlay = gamePlay;
     this.stateService = stateService;
     this.state = this.stateService.state;
@@ -90,7 +90,14 @@ export default class GameController {
     this.state.currentTurn.status = "select";
     this.gamePlay.removeCurrentCellStyle(this.state.selectedIndex);
     this.state.selectedIndex = null;
-    this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]); 
+    this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
+    // update UI theme
+    for (let item of this.state.themes.list) {
+      try {
+        this.gamePlay.boardEl.classList.remove(item);
+      } catch (err) {}
+    }
+    this.gamePlay.boardEl.classList.add(this.state.themes.list[0]);
     if (this.gamePlay.boardEl.style.pointerEvents === "none") {
       this.gamePlay.boardEl.style.pointerEvents = "auto";
     }
@@ -227,6 +234,10 @@ export default class GameController {
     this.gamePlay.addCellEnterListener(this.onCellEnter);
     this.gamePlay.addCellLeaveListener(this.onCellLeave);
     this.gamePlay.addCellClickListener(this.onCellClick);
+    this.gamePlay.addSaveGameListener(this.saveGame);
+    this.gamePlay.addLoadGameListener(this.loadGame);
+
+    
   }
 
   onCellClick = (index) => {
@@ -369,5 +380,34 @@ export default class GameController {
       this.gamePlay.setCursor(cursors.auto);
     }
     this.gamePlay.hideCellTooltip(index);
+  }
+
+  saveGame = () => {
+    // TODO: save game
+    this.stateService.save(this.state);
+    console.log('saved')
+    console.log(this.state)
+  }
+
+  loadGame = () => {
+    // TODO: load game
+    console.log('loaded')
+    console.log(this.state)
+    this.state = this.stateService.load();
+
+    if (this.state.selectedIndex) {
+      this.gamePlay.selectCell(this.state.selectedIndex);
+    }
+
+    // update UI theme
+    for (let item of this.state.themes.list) {
+      try {
+        this.gamePlay.boardEl.classList.remove(item);
+      } catch (err) {}
+    }
+    this.gamePlay.boardEl.classList.add(this.state.themes.list[this.state.themes.current]);
+
+
+    this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
   }
 }
