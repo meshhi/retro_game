@@ -248,7 +248,6 @@ export default class GameController {
   }
 
   onCellClick = (index) => {
-    console.log(this.state)
     // TODO: react to click
     const currentCellCharacter = [...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === index);
     let cellCharacterTeam = -1;
@@ -295,7 +294,7 @@ export default class GameController {
         if (this.state.currentTurn.player == 1) {
           if (this.state.currentTurn.status === "select") {
             console.log('bot after move')
-            this.bot.makeMove(this.state.currentTurn.player);
+            this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave);
             this.state.currentTurn.player = 0;
           }
         }
@@ -349,7 +348,7 @@ export default class GameController {
             if (this.state.currentTurn.player == 1) {
               if (this.state.currentTurn.status === "select") {
                 console.log('bot after attack')
-                this.bot.makeMove();
+                this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave);
                 this.state.currentTurn.player = 0;
               }
             }
@@ -366,7 +365,7 @@ export default class GameController {
     this.gamePlay.hideCellTooltip(index);
   }
 
-  onCellEnter = (index, indexFrom) => {
+  onCellEnter = (index) => {
     // TODO: react to mouse enter
     if (this.state.currentTurn.status === "action") {
       if (this.state.selectedIndex !== index) {

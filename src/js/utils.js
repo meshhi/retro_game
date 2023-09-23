@@ -89,9 +89,8 @@ export const getCharacteristics = (currentCellCharacter) => {
   return `🏅 ${currentCellCharacter.character.level} ⚔️ ${currentCellCharacter.character.attack} 🛡 ${currentCellCharacter.character.defence} ❤️ ${currentCellCharacter.character.health}`
 }
 
-export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix) => {
+export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix, getCoords = false) => {
   const selectedCoords = boardMatrix[selectedCharacter.position];
-  const hoveredCoords = boardMatrix[hoverCell];
   let step = selectedCharacter.character.speed;
   let validCoords = [];
   for (let i = selectedCoords[0]; i <= selectedCoords[0] + step; i += 1) {
@@ -119,6 +118,11 @@ export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix) =
     validCoords.push([selectedCoords[0], i]);
   }
 
+  if (getCoords) {
+    return validCoords;
+  }
+
+  const hoveredCoords = boardMatrix[hoverCell];
   if (validCoords.find(item => item.toString() == hoveredCoords.toString())) {
     return true
   } else {
@@ -126,9 +130,8 @@ export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix) =
   }
 }
 
-export const determineValidAttacks = (selectedCharacter, hoverCell, boardMatrix) => {
+export const determineValidAttacks = (selectedCharacter, hoverCell, boardMatrix, getCoords = false) => {
   const selectedCoords = boardMatrix[selectedCharacter.position];
-  const hoveredCoords = boardMatrix[hoverCell];
   let step = selectedCharacter.character.attackRange;
   let validCoords = [];
   for (let i = selectedCoords[0]; i <= selectedCoords[0] + step; i += 1) {
@@ -156,6 +159,11 @@ export const determineValidAttacks = (selectedCharacter, hoverCell, boardMatrix)
     validCoords.push([selectedCoords[0], i]);
   }
 
+  if (getCoords) {
+    return validCoords;
+  }
+
+  const hoveredCoords = boardMatrix[hoverCell];
   if (validCoords.find(item => item.toString() == hoveredCoords.toString())) {
     return true
   } else {
