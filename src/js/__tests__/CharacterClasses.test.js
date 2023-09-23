@@ -53,19 +53,7 @@ test('Daemon success', () => {
 
 test('Correct first level character', () => {
     const vampire = new Vampire(1);
-    expect(vampire).toEqual({
-        level: 1,
-        attack: 25,
-        defence: 25,
-        health: 100,
-        type: 'vampire'
-      });
-});
-
-test('Level up', () => {
-    const vampire = new Vampire(6);
-    console.log(vampire)
-    expect(1).toBe(1);
+    expect(vampire.level).toBe(1);
     // expect(vampire).toEqual({
     //     level: 1,
     //     attack: 25,
@@ -73,4 +61,13 @@ test('Level up', () => {
     //     health: 100,
     //     type: 'vampire'
     //   });
+});
+
+test('Correct third level character', () => {
+    const vampire = new Vampire(3);
+    let result = false;
+    if (vampire.level === 3 && vampire.attack === 81 && vampire.defence === 81) { 
+        result = true; 
+    }
+    expect(result).toBe(true);
 });

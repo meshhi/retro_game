@@ -11,6 +11,7 @@ import { Vampire } from './characters/Vampire.js';
 import PositionedCharacter from './PositionedCharacter';
 import { generateMatrix, getCharacteristics, determineValidMoves, determineValidAttacks, determineCharacterTeam } from './utils';
 import GamePlay from './GamePlay';
+import GameState from './GameState';
 
 import cursors from './cursors.js';
 
@@ -87,7 +88,12 @@ export default class GameController {
     };
     this.state.currentTurn.player = 0;
     this.state.currentTurn.status = "select";
+    this.gamePlay.removeCurrentCellStyle(this.state.selectedIndex);
+    this.state.selectedIndex = null;
     this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]); 
+    if (this.gamePlay.boardEl.style.pointerEvents === "none") {
+      this.gamePlay.boardEl.style.pointerEvents = "auto";
+    }
   }
 
   upgradeGameLevel = () => {
@@ -199,6 +205,12 @@ export default class GameController {
     this.state.currentTurn.player = 0;
     this.state.currentTurn.status = "select";
     this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]); 
+  
+    GameState.gameStats.wins++;
+  }
+
+  gameOver = () => {
+    this.gamePlay.boardEl.style.pointerEvents = "none";
   }
 
   init() {
@@ -219,6 +231,7 @@ export default class GameController {
 
   onCellClick = (index) => {
     // console.log(this.state)
+    console.log(GameState.gameStats)
     // TODO: react to click
     const currentCellCharacter = [...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === index);
     let cellCharacterTeam = -1;
@@ -302,6 +315,9 @@ export default class GameController {
             this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
             if ([...this.state.teams['2'].filter(item => item.character.health > 0)].length === 0) {
               this.upgradeGameLevel();
+            }
+            if ([...this.state.teams['1'].filter(item => item.character.health > 0)].length === 0) {
+              this.gameOver();
             }
             document.querySelector('body').style.pointerEvents = 'auto';
           });
