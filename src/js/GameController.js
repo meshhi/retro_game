@@ -20,6 +20,7 @@ export default class GameController {
     this.gamePlay = gamePlay;
     this.stateService = stateService;
     this.state = this.stateService.state;
+    this.state.themes = {};
     this.boardMatrix = generateMatrix(this.gamePlay.boardSize);
   }
 
@@ -44,8 +45,10 @@ export default class GameController {
     const [indexTeamA, indexTeamB] = getTeamIndixes();
 
     const generatePositionedTeams = () => {
-      const teamA = generateTeam([Bowman, Magician, Swordsman], 4, 2).characters;
-      const teamB = generateTeam([Daemon, Undead, Vampire], 4, 2).characters;
+      // const teamA = generateTeam([Bowman, Magician, Swordsman], 4, 2).characters;
+      // const teamB = generateTeam([Daemon, Undead, Vampire], 4, 2).characters;
+      const teamA = generateTeam([Swordsman], 4, 3).characters;
+      const teamB = generateTeam([Undead], 4, 1).characters;
       const busyIndexes = [];
 
       const positionedTeamA = [];
@@ -86,13 +89,86 @@ export default class GameController {
     };
     this.state.currentTurn.player = 0;
     this.state.currentTurn.status = "select";
-    this.gamePlay.redrawPositions([...teamA, ...teamB]);
+    this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]); 
+  }
+
+  upgradeGameLevel = () => {
+    const getTeamIndixes = () => {
+      const matrix = this.boardMatrix;
+      const leftColumns = [this.gamePlay.boardSize - this.gamePlay.boardSize, this.gamePlay.boardSize - this.gamePlay.boardSize + 1]
+      const rightColumns = [this.gamePlay.boardSize - 2, this.gamePlay.boardSize - 1]
+      const leftIndexes = []
+      const rightIndexes = []
+      for (let [index, item] of Object.entries(matrix)) {
+        if (leftColumns.includes(item[1])) {
+          leftIndexes.push(Number(index))
+        }
+
+        if (rightColumns.includes(item[1])) {
+          rightIndexes.push(Number(index))
+        }
+      }
+      return [leftIndexes, rightIndexes]
+    }
+    const [indexTeamA, indexTeamB] = getTeamIndixes();
+
+    const updateStartPositions = () => {
+      const teamA = this.state.teams['1'];
+      const teamB = this.state.teams['2'];
+      const busyIndexes = [];
+
+      for (let item of teamA) {
+        let currentIndex;
+        currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
+        if (busyIndexes.includes(currentIndex)) {
+            while(busyIndexes.includes(currentIndex)) {
+              currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
+            }
+        }
+        busyIndexes.push(currentIndex);
+        item.position = currentIndex;
+        item.character.health = 100;
+      }
+
+      for (let item of teamB) {
+        let currentIndex;
+        currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
+
+        if (busyIndexes.includes(currentIndex)) {
+          while(busyIndexes.includes(currentIndex)) {
+            currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
+
+          }
+        }
+        busyIndexes.push(currentIndex);
+        item.position = currentIndex;
+        item.character.health = 100;
+      }
+    }
+    updateStartPositions();
+
+    // update UI theme
+    this.gamePlay.boardEl.classList.remove(this.state.themes.list[this.state.themes.current]);
+    this.state.themes.current += 1;
+    if (this.state.themes.current === 4) {
+      this.state.themes.current = 0;
+    }
+    this.gamePlay.boardEl.classList.add(this.state.themes.list[this.state.themes.current]);
+
+    this.state.currentTurn.player = 0;
+    this.state.currentTurn.status = "select";
+    this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]); 
   }
 
   init() {
     // TODO: add event listeners to gamePlay events
     // TODO: load saved stated from stateService
-    this.gamePlay.drawUi(themes.prairie);
+    this.state.themes.list = [];
+    for (let key in themes) {
+      this.state.themes.list.push(key);
+    }
+    this.state.themes.current = 0;
+    this.gamePlay.drawUi(this.state.themes.list[this.state.themes.current]);
     this.initNewGame();
     this.gamePlay.addNewGameListener(this.initNewGame);
     this.gamePlay.addCellEnterListener(this.onCellEnter);
@@ -101,6 +177,7 @@ export default class GameController {
   }
 
   onCellClick = (index) => {
+    console.log(this.state)
     // TODO: react to click
     const currentCellCharacter = [...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === index);
     let cellCharacterTeam = -1;
@@ -142,7 +219,7 @@ export default class GameController {
         this.state.currentTurn.player = this.state.currentTurn.player == 1 ? 0 : 1;
         this.gamePlay.deselectCell(this.state.selectedIndex);
         this.state.selectedIndex = null;
-        this.gamePlay.redrawPositions([...this.state.teams['1'], ...this.state.teams['2']]); 
+        this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
       }
       // attack
       if (this.gamePlay.cells[index].classList.contains('selected-red')) {
@@ -166,6 +243,9 @@ export default class GameController {
               defence = this.state.teams[teamNumber][i].character.defence;
               damage = Math.max(attack - defence, attack * 0.1);
               this.state.teams[teamNumber][i].character.health -= damage;
+              if (this.state.teams[teamNumber][i].character.health <= 0) {
+                this.state.teams[teamNumber][i].position = -1;
+              }
               break;
             }
           }
@@ -178,7 +258,10 @@ export default class GameController {
             this.state.currentTurn.player = this.state.currentTurn.player == 1 ? 0 : 1;
             this.gamePlay.deselectCell(this.state.selectedIndex);
             this.state.selectedIndex = null;
-            this.gamePlay.redrawPositions([...this.state.teams['1'], ...this.state.teams['2']]); 
+            this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
+            if ([...this.state.teams['2'].filter(item => item.character.health > 0)].length === 0) {
+              this.upgradeGameLevel();
+            }
             document.querySelector('body').style.pointerEvents = 'auto';
           });
       }

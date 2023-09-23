@@ -86,6 +86,9 @@ export default class GamePlay {
     }
 
     for (const position of positions) {
+      if (position === -1) {
+        continue;
+      }
       const cellEl = this.boardEl.children[position.position];
       const charEl = document.createElement('div');
       charEl.classList.add('character', position.character.type);
