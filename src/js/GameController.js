@@ -49,14 +49,13 @@ export default class GameController {
     const generatePositionedTeams = () => {
       const teamA = generateTeam([Swordsman, Magician, Bowman], 4, 10).characters;
       const teamB = generateTeam([Undead, Vampire, Daemon], 4, 10).characters;
-
       // DEBUG
-      for (let item of teamA) {
-        item.attack *= 1000;
-      }
-      for (let item of teamB) {
-        item.attack *= 1000;
-      }
+      // for (let item of teamA) {
+      //   item.attack *= 1000;
+      // }
+      // for (let item of teamB) {
+      //   item.attack *= 1000;
+      // }
 
       const busyIndexes = [];
 
@@ -135,8 +134,8 @@ export default class GameController {
 
     const updateStartPositions = () => {
       const generatePositionedTeams = () => {
-        const teamA = generateTeam([Swordsman, Magician, Bowman], 4, 5).characters;
-        const teamB = generateTeam([Undead, Vampire, Daemon], 4, 2).characters;
+        const teamA = generateTeam([Swordsman, Magician, Bowman], 4, 10).characters;
+        const teamB = generateTeam([Undead, Vampire, Daemon], 4, 10).characters;
         const busyIndexes = [];
   
         const positionedTeamA = [];
@@ -257,6 +256,7 @@ export default class GameController {
 
   onCellClick = async (index) => {
     // TODO: react to click
+    console.log(this.state)
     const currentCellCharacter = [...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === index);
     let cellCharacterTeam = -1;
     if (currentCellCharacter) {

@@ -201,11 +201,11 @@ export default class GamePlay {
 
   static showError(message) {
     // alert(message);
-    console.warn(message);
+    console.error(message);
   }
 
   static showMessage(message) {
-    alert(message);
+    console.warn(message);
   }
 
   selectCell(index, color = "yellow") {
@@ -296,7 +296,6 @@ export default class GamePlay {
   };
 
   removeCurrentCellStyle = (index) => {
-    console.log("removeCurrentCellStyle", index);
     try {
       this.cells[index].classList.remove("selected");
     } catch(e) {

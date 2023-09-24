@@ -7,6 +7,7 @@ import { Magician } from "./characters/Magician.js";
 import { Undead } from "./characters/Undead.js";
 import { Vampire } from "./characters/Vampire.js";
 import { Daemon } from "./characters/Daemon.js";
+import GamePlay from "./GamePlay";
 
 export default class GameStateService {
   constructor(storage) {
@@ -53,6 +54,7 @@ export default class GameStateService {
       }
       return loadedState;
     } catch (e) {
+      GamePlay.showMessage('State could not be loaded')
       throw new Error("Invalid state");
     }
   }
