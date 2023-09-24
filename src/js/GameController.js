@@ -257,7 +257,6 @@ export default class GameController {
 
   onCellClick = async (index) => {
     // TODO: react to click
-    console.log('CELL CLICKED')
     const currentCellCharacter = [...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === index);
     let cellCharacterTeam = -1;
     if (currentCellCharacter) {
@@ -304,9 +303,7 @@ export default class GameController {
         if (this.state.currentTurn.player == 1) {
           if (this.state.currentTurn.status === "select") {
             // BOT MOVE
-            console.log(this.state)
             this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave, this.gamePlay.removeCurrentCellStyle, this.gamePlay.cells);
-            console.log(this.state)
           }
         }
       }

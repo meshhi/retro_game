@@ -24,20 +24,12 @@ class Bot {
     let randomMoveCoordIndex = Math.floor(Math.random() * validMoveCoords.length);
     let randomMoveCoord = validMoveCoords[randomMoveCoordIndex]
     let randomMoveCoordPosition = randomMoveCoord[0] * (boardSize) + (randomMoveCoord[1]);
-    console.log('character coordinates: ')
-    console.log(characterCoordinates)
-    console.log(cells[characterCoordinates])
-    console.log('move coordinates: ')
-    console.log(randomMoveCoordPosition)
-    console.log(cells[randomMoveCoordPosition])
     let characterCell = cells[randomMoveCoordPosition].children.length
     while (characterCoordinates === randomMoveCoordPosition || randomMoveCoordPosition < 0 || characterCell) {
       randomMoveCoordIndex = Math.floor(Math.random() * validMoveCoords.length);
       randomMoveCoord = validMoveCoords[randomMoveCoordIndex]
       randomMoveCoordPosition = randomMoveCoord[0] * (boardSize) + (randomMoveCoord[1]);
       characterCell = cells[randomMoveCoordPosition].children.length
-      console.log(randomMoveCoordPosition)
-      console.log(cells[randomMoveCoordPosition])
     }
 
 
@@ -46,28 +38,42 @@ class Bot {
     let randomAttackCoordIndex = Math.floor(Math.random() * validAttackCoords.length);
     let randomAttackCoord = validAttackCoords[randomAttackCoordIndex]
     let randomAttackCoordPosition = randomAttackCoord[0] * (boardSize) + (randomAttackCoord[1]);
-    // console.log('attack coordinates: ')
-    // console.log(randomAttackCoordPosition)
-    // console.log(cells[randomAttackCoordPosition])
+    let characterCellAttack = cells[randomAttackCoordPosition].children.length;
+    let enemyCharacterCell = cells[randomAttackCoordPosition].children[0] && (cells[randomAttackCoordPosition].children[0].classList.contains('swordsman') || cells[randomAttackCoordPosition].children[0].classList.contains('bowman') || cells[randomAttackCoordPosition].children[0].classList.contains('magician'))
 
-    // let friendlyCharacterCell = cells[randomMoveCoordPosition].children[0] && (cells[randomMoveCoordPosition].children[0].classList.contains('daemon') || cells[randomMoveCoordPosition].children[0].classList.contains('vampire') || cells[randomMoveCoordPosition].children[0].classList.contains('undead'))
-
-    while (characterCoordinates === randomAttackCoordPosition || randomAttackCoordPosition < 0) {
+    let counter = 0;
+    let found = false;
+    while (characterCoordinates === randomAttackCoordPosition || randomAttackCoordPosition < 0 || !characterCellAttack || !enemyCharacterCell) {
+      found = false;
       randomAttackCoordIndex = Math.floor(Math.random() * validAttackCoords.length);
       randomAttackCoord = validAttackCoords[randomAttackCoordIndex]
       randomAttackCoordPosition = randomAttackCoord[0] * (boardSize) + (randomAttackCoord[1]);
-      // console.log(randomAttackCoordPosition)
-      // console.log(cells[randomAttackCoordPosition])
+      characterCellAttack = cells[randomAttackCoordPosition].children.length;
+      enemyCharacterCell = cells[randomAttackCoordPosition].children[0] && (cells[randomAttackCoordPosition].children[0].classList.contains('swordsman') || cells[randomAttackCoordPosition].children[0].classList.contains('bowman') || cells[randomAttackCoordPosition].children[0].classList.contains('magician'));
+      counter++;
+      found = true;
+      if (counter > validAttackCoords.length) {
+        found = false;
+        break;
+      }
     }
 
-    cellEnter(randomMoveCoordPosition);
-    await cellClick(randomMoveCoordPosition); // выбрали персонажа
-    cellLeave(randomMoveCoordPosition);
-    removeCurrentCellStyle(randomMoveCoordPosition)
-
-    console.log('character coordinates: ', characterCoordinates)
-    console.log('randomAttackCoordPosition: ', randomAttackCoordPosition)
-
+    // attack
+    if (found) {
+      cellEnter(randomAttackCoordPosition);
+      await cellClick(randomAttackCoordPosition); // выбрали персонажа
+      cellLeave(randomAttackCoordPosition);
+      console.log('attacked')
+      console.log(randomAttackCoordPosition)
+      console.log(cells[randomAttackCoordPosition])
+      removeCurrentCellStyle(randomAttackCoordPosition)
+      console.log(cells[randomAttackCoordPosition])
+    } else {
+      cellEnter(randomMoveCoordPosition);
+      await cellClick(randomMoveCoordPosition); // выбрали персонажа
+      cellLeave(randomMoveCoordPosition);
+      removeCurrentCellStyle(randomMoveCoordPosition)
+    }
     console.log('bot end')
   }
 }

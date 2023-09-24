@@ -253,12 +253,8 @@ export default class GamePlay {
       damageEl.textContent = damage;
       damageEl.classList.add('damage');
       cell.appendChild(damageEl);
-
       damageEl.addEventListener('animationend', () => {
-        console.log('cell')
-        console.log(cell)
         cell.removeChild(damageEl);
-        
         resolve();
       });
     });
@@ -268,7 +264,7 @@ export default class GamePlay {
     this.boardEl.style.cursor = cursor;
   }
 
-  setCurrentCellStyle(index, styleType) {
+  setCurrentCellStyle = (index, styleType) => {
     if (styleType === 'go') {
       this.cells[index].classList.add('selected');
       this.cells[index].classList.add('selected-green');
@@ -299,26 +295,27 @@ export default class GamePlay {
     }
   }
 
-  removeCurrentCellStyle(index) {
+  removeCurrentCellStyle = (index) => {
+    console.log('removeCurrentCellStyle', index);
     try {
       this.cells[index].classList.remove('selected');
     } catch(e) {
-
+      console.log('no_selected')
     }
     try {
       this.cells[index].classList.remove('selected-green');
     } catch(e) {
-      
+      console.log('no_selected_green')
     }
     try {
       this.cells[index].classList.remove('selected-yellow');
     } catch(e) {
-      
+      console.log('no_selected_yellow')
     }
     try {
       this.cells[index].classList.remove('selected-red');
     } catch(e) {
-      
+      console.log('no_selected_red')
     }
 
     try {
