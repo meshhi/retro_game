@@ -32,7 +32,7 @@ export function generateTeam(allowedTypes, maxLevel, characterCount) {
   const characters = [];
   const playerGenerator = new characterGenerator(allowedTypes, maxLevel);
   for (let i = 0; i < characterCount; i++) {
-    characters.push(playerGenerator.next().value)
+    characters.push(playerGenerator.next().value);
   }
   return new Team(characters);
 }

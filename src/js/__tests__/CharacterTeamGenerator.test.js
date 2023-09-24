@@ -1,29 +1,29 @@
-import { Bowman } from '../characters/Bowman.js';
-import { Vampire } from '../characters/Vampire.js';
-import { Swordsman } from '../characters/Swordsman.js';
-import { Magician } from '../characters/Magician.js';
+import { Bowman } from "../characters/Bowman.js";
+import { Vampire } from "../characters/Vampire.js";
+import { Swordsman } from "../characters/Swordsman.js";
+import { Magician } from "../characters/Magician.js";
 
-import { characterGenerator } from '../generators.js';
-import { generateTeam } from '../generators.js';
+import { characterGenerator } from "../generators.js";
+import { generateTeam } from "../generators.js";
 
-test('Character generator: generate list of characters', () => {
+test("Character generator: generate list of characters", () => {
     const playerGenerator = characterGenerator([Vampire, Bowman], 10);
     const characterList = [];
     for (let i = 0; i < 10; i++) {
-        characterList.push(playerGenerator.next())
+        characterList.push(playerGenerator.next());
     }
 
     expect(characterList.length).toBe(10);
 });
 
-test('Team generator: length', () => {
+test("Team generator: length", () => {
     const teamLen = 10;
     const maxLevel = 4;
     const team = generateTeam([Vampire, Bowman, Swordsman], maxLevel, teamLen);
     expect(team.characters.length).toBe(teamLen);
 });
 
-test('Team generator: team max level', () => {
+test("Team generator: team max level", () => {
     const teamLen = 4;
     const maxLevel = 3;
     const playerTypes = [Bowman, Swordsman, Magician]; // доступные классы игрока
@@ -33,20 +33,20 @@ test('Team generator: team max level', () => {
 });
 
 // Проверьте, выдаёт ли генератор characterGenerator бесконечно новые персонажи из списка (учёт аргумента allowedTypes)
-test('Character generator: valid classes', () => {
+test("Character generator: valid classes", () => {
     expect(() => {
         const playerClasses = [Vampire, Bowman];
         const playerGenerator = characterGenerator(playerClasses, 10);
         const characterList = [];
         for (let i = 0; i < 10; i++) {
-            characterList.push(playerGenerator.next().value)
+            characterList.push(playerGenerator.next().value);
         }
         characterList.forEach(character => {
             if (!playerClasses.includes(character.constructor)) {
-                throw new Error('This class is not allowed');
+                throw new Error("This class is not allowed");
             }
         });
     
     }
-    ).not.toThrow('This class is not allowed');
+    ).not.toThrow("This class is not allowed");
 });

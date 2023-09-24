@@ -27,67 +27,67 @@ export function calcTileType(index, boardSize) {
   const matrix = generateMatrix(boardSize);
   let [x, y] = matrix[index];
   if ((x == 0) && (y == 0)) {
-    return 'top-left';
+    return "top-left";
   }
   if ((x == 0) && (y == (boardSize - 1))) {
-    return 'top-right';
+    return "top-right";
   }
   if ((x == (boardSize - 1)) && (y == 0)) {
-    return 'bottom-left';
+    return "bottom-left";
   }
   if ((x == (boardSize - 1)) && (y == (boardSize - 1))) {
-    return 'bottom-right';
+    return "bottom-right";
   }
   if (x == (boardSize - 1)) {
-    return 'bottom';
+    return "bottom";
   }
   if (x == 0) {
-    return 'top';
+    return "top";
   }
   if (y == (boardSize - 1)) {
 
-    return 'right';
+    return "right";
   }
   if (y == 0) {
-    return 'left';
+    return "left";
   }
-  return 'center';
+  return "center";
 }
 
 export function calcHealthLevel(health) {
   if (health < 15) {
-    return 'critical';
+    return "critical";
   }
 
   if (health < 50) {
-    return 'normal';
+    return "normal";
   }
 
-  return 'high';
+  return "high";
 }
 
 export const generateMatrix = (boardSize) => {
-  let matrix = []
+  let matrix = [];
   for (let i = 0; i < boardSize; i++) {
     for (let j = 0; j < boardSize; j++) {
-      matrix.push([i, j])
+      matrix.push([i, j]);
     }
   }
-  return matrix
-}
+  return matrix;
+};
 
 export const generateTooltip = () => {
-  const tooltip = document.createElement('div');
-  tooltip.classList.add('tooltip');
-  const tooltipContent = document.createElement('div');
-  tooltipContent.classList.add('tooltip_content');
+  const tooltip = document.createElement("div");
+  tooltip.classList.add("tooltip");
+  const tooltipContent = document.createElement("div");
+  tooltipContent.classList.add("tooltip_content");
   tooltip.appendChild(tooltipContent);
-  return tooltip
-}
+  return tooltip;
+};
 
 export const getCharacteristics = (currentCellCharacter) => {
-  return `🏅 ${currentCellCharacter.character.level} ⚔️ ${currentCellCharacter.character.attack} 🛡 ${currentCellCharacter.character.defence} ❤️ ${currentCellCharacter.character.health}`
-}
+  return `🏅 ${currentCellCharacter.character.level} ⚔️ ${currentCellCharacter.character.attack} 🛡 ${currentCellCharacter.character.defence} ❤️ ${currentCellCharacter.character.health}`;
+};
 
 export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix, getCoords = false) => {
   const selectedCoords = boardMatrix[selectedCharacter.position];
@@ -125,15 +125,15 @@ export const determineValidMoves = (selectedCharacter, hoverCell, boardMatrix, g
   const hoveredCoords = boardMatrix[hoverCell];
   try {
     if (validCoords.find(item => item.toString() == hoveredCoords.toString())) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
 
   } catch (error) {
-    debugger
+    debugger;
   }
-}
+};
 
 export const determineValidAttacks = (selectedCharacter, hoverCell, boardMatrix, getCoords = false) => {
   const selectedCoords = boardMatrix[selectedCharacter.position];
@@ -170,11 +170,11 @@ export const determineValidAttacks = (selectedCharacter, hoverCell, boardMatrix,
 
   const hoveredCoords = boardMatrix[hoverCell];
   if (validCoords.find(item => item.toString() == hoveredCoords.toString())) {
-    return true
+    return true;
   } else {
-    return false
+    return false;
   }
-}
+};
 
 export const determineCharacterTeam = (team1, team2, hoverCharacter) => {
   let currentCharacterTeam = -1;
@@ -184,5 +184,5 @@ export const determineCharacterTeam = (team1, team2, hoverCharacter) => {
   if (team2.includes(hoverCharacter)) {
     currentCharacterTeam = 1;
   }
-  return currentCharacterTeam
-}
+  return currentCharacterTeam;
+};

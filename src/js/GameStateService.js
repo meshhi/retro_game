@@ -1,12 +1,12 @@
 import GameState from "./GameState";
 import Character from "./Character";
 import PositionedCharacter from "./PositionedCharacter";
-import { Bowman } from './characters/Bowman.js';
-import { Swordsman } from './characters/Swordsman.js';
-import { Magician } from './characters/Magician.js';
-import { Undead } from './characters/Undead.js';
-import { Vampire } from './characters/Vampire.js';
-import { Daemon } from './characters/Daemon.js';
+import { Bowman } from "./characters/Bowman.js";
+import { Swordsman } from "./characters/Swordsman.js";
+import { Magician } from "./characters/Magician.js";
+import { Undead } from "./characters/Undead.js";
+import { Vampire } from "./characters/Vampire.js";
+import { Daemon } from "./characters/Daemon.js";
 
 export default class GameStateService {
   constructor(storage) {
@@ -15,32 +15,32 @@ export default class GameStateService {
   }
 
   save(state) {
-    this.storage.setItem('state', JSON.stringify(state));
+    this.storage.setItem("state", JSON.stringify(state));
   }
 
   load() {
     try {
-      let loadedState = JSON.parse(this.storage.getItem('state'));
+      let loadedState = JSON.parse(this.storage.getItem("state"));
       for (let team in loadedState.teams) {
         for (let positionedCharacter of loadedState.teams[team]) {
           if (!(positionedCharacter.character instanceof Character)) {
             let character = positionedCharacter.character;
-            if (character.type === 'vampire') {
+            if (character.type === "vampire") {
               character = new Vampire(character.level, character.attack, character.defence, character.health, character.type, true);
             }
-            if (character.type === 'daemon') {
+            if (character.type === "daemon") {
               character = new Daemon(character.level, character.attack, character.defence, character.health, character.type, true);
             }
-            if (character.type === 'undead') {
+            if (character.type === "undead") {
               character = new Undead(character.level, character.attack, character.defence, character.health, character.type, true);
             }
-            if (character.type === 'bowman') {
+            if (character.type === "bowman") {
               character = new Bowman(character.level, character.attack, character.defence, character.health, character.type, true);
             }
-            if (character.type === 'swordsman') {
+            if (character.type === "swordsman") {
               character = new Swordsman(character.level, character.attack, character.defence, character.health, character.type, true);
             }
-            if (character.type === 'magician') {
+            if (character.type === "magician") {
               character = new Magician(character.level, character.attack, character.defence, character.health, character.type, true);
             }
             positionedCharacter.character = character;
@@ -53,7 +53,7 @@ export default class GameStateService {
       }
       return loadedState;
     } catch (e) {
-      throw new Error('Invalid state');
+      throw new Error("Invalid state");
     }
   }
 }

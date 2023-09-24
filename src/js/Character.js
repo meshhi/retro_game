@@ -13,10 +13,10 @@
  * vampire
  */
 export default class Character {
-  constructor(level, type = 'generic', attack, defence, health) {
+  constructor(level, type = "generic", attack, defence, health) {
     // TODO: выбросите исключение, если кто-то использует "new Character()"
-    if (new.target.name == 'Character') {
-      throw new TypeError('Cannot construct Character instances directly');
+    if (new.target.name == "Character") {
+      throw new TypeError("Cannot construct Character instances directly");
     }
     this.level = 1;
     this.attack = attack;
@@ -33,5 +33,5 @@ export default class Character {
     this.defence = Math.max(this.defence, this.defence * (80 + this.health) / 100);
     this.health = (this.health + 100) > 100 ? 100 : this.health + 100;
     this.level += 1;
-  }
+  };
 }
