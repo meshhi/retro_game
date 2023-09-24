@@ -47,8 +47,17 @@ export default class GameController {
     const [indexTeamA, indexTeamB] = getTeamIndixes();
 
     const generatePositionedTeams = () => {
-      const teamA = generateTeam([Swordsman, Magician, Bowman], 4, 5).characters;
-      const teamB = generateTeam([Undead, Vampire, Daemon], 4, 2).characters;
+      const teamA = generateTeam([Swordsman, Magician, Bowman], 4, 10).characters;
+      const teamB = generateTeam([Undead, Vampire, Daemon], 4, 10).characters;
+
+      // DEBUG
+      for (let item of teamA) {
+        item.attack *= 1000;
+      }
+      for (let item of teamB) {
+        item.attack *= 1000;
+      }
+
       const busyIndexes = [];
 
       const positionedTeamA = [];
@@ -244,11 +253,11 @@ export default class GameController {
     winEl.classList.add('win');
     winEl.textContent = `Wins: ${GameState.gameStats.wins}`
     document.querySelector('.controls').appendChild(winEl);
-    
   }
 
-  onCellClick = (index) => {
+  onCellClick = async (index) => {
     // TODO: react to click
+    console.log('CELL CLICKED')
     const currentCellCharacter = [...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === index);
     let cellCharacterTeam = -1;
     if (currentCellCharacter) {
@@ -294,7 +303,10 @@ export default class GameController {
 
         if (this.state.currentTurn.player == 1) {
           if (this.state.currentTurn.status === "select") {
-            this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave, this.gamePlay.removeCurrentCellStyle);
+            // BOT MOVE
+            console.log(this.state)
+            this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave, this.gamePlay.removeCurrentCellStyle, this.gamePlay.cells);
+            console.log(this.state)
           }
         }
       }
@@ -330,27 +342,49 @@ export default class GameController {
         }
 
         
-        this.gamePlay.showDamage(index, damage)
-          .then(res => {
-            this.state.currentTurn.status = 'select';
-            this.state.currentTurn.player = this.state.currentTurn.player == 1 ? 0 : 1;
-            this.gamePlay.deselectCell(this.state.selectedIndex);
-            this.state.selectedIndex = null;
-            this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
-            if ([...this.state.teams['2'].filter(item => item.character.health > 0)].length === 0) {
-              this.upgradeGameLevel();
-            }
-            if ([...this.state.teams['1'].filter(item => item.character.health > 0)].length === 0) {
-              this.gameOver();
-            }
-            document.querySelector('body').style.pointerEvents = 'auto';
+        // this.gamePlay.showDamage(index, damage)
+        //   .then(res => {
+        //     this.state.currentTurn.status = 'select';
+        //     this.state.currentTurn.player = this.state.currentTurn.player == 1 ? 0 : 1;
+        //     this.gamePlay.deselectCell(this.state.selectedIndex);
+        //     this.state.selectedIndex = null;
+        //     this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
+        //     if ([...this.state.teams['2'].filter(item => item.character.health > 0)].length === 0) {
+        //       this.upgradeGameLevel();
+        //     }
+        //     if ([...this.state.teams['1'].filter(item => item.character.health > 0)].length === 0) {
+        //       this.gameOver();
+        //     }
+        //     document.querySelector('body').style.pointerEvents = 'auto';
 
-            if (this.state.currentTurn.player == 1) {
-              if (this.state.currentTurn.status === "select") {
-                this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave, this.gamePlay.removeCurrentCellStyle);
-              }
+        //     if (this.state.currentTurn.player == 1) {
+        //       if (this.state.currentTurn.status === "select") {
+        //         // BOT ATTACK
+        //         this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave, this.gamePlay.removeCurrentCellStyle);
+        //       }
+        //     }
+        //   });
+
+          await this.gamePlay.showDamage(index, damage);
+          this.state.currentTurn.status = 'select';
+          this.state.currentTurn.player = this.state.currentTurn.player == 1 ? 0 : 1;
+          this.gamePlay.deselectCell(this.state.selectedIndex);
+          this.state.selectedIndex = null;
+          this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
+          if ([...this.state.teams['2'].filter(item => item.character.health > 0)].length === 0) {
+            this.upgradeGameLevel();
+          }
+          if ([...this.state.teams['1'].filter(item => item.character.health > 0)].length === 0) {
+            this.gameOver();
+          }
+          document.querySelector('body').style.pointerEvents = 'auto';
+
+          if (this.state.currentTurn.player == 1) {
+            if (this.state.currentTurn.status === "select") {
+              // BOT ATTACK
+              this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave, this.gamePlay.removeCurrentCellStyle, this.gamePlay.cells);
             }
-          });
+          }
       }
       // another character in team
       if (this.gamePlay.cells[index].classList.contains('friendly')) {
@@ -361,6 +395,7 @@ export default class GameController {
       this.gamePlay.setCursor(cursors.auto);
     }
     this.gamePlay.hideCellTooltip(index);
+    return Promise.resolve();
   }
 
   onCellEnter = (index) => {
