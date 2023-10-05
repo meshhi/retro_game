@@ -15,11 +15,11 @@ export default class GameStateService {
     this.state = new GameState().state;
   }
 
-  save(state) {
+  save = (state) => {
     this.storage.setItem("state", JSON.stringify(state));
   }
 
-  load() {
+  load = () => {
     try {
       let loadedState = JSON.parse(this.storage.getItem("state"));
       for (let team in loadedState.teams) {

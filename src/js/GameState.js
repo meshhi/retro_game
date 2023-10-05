@@ -25,7 +25,7 @@ export default class GameState {
         "selectedIndex": null
     }
   }
-  static from(object) {
+  static from = (object) => {
     // TODO: create object
     return null;
   }

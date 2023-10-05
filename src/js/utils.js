@@ -22,7 +22,7 @@
  * calcTileType(7, 7); // 'left'
  * ```
  * */
-export function calcTileType(index, boardSize) {
+export const calcTileType = (index, boardSize) => {
   // TODO: ваш код будет тут
   const matrix = generateMatrix(boardSize);
   let [x, y] = matrix[index];
@@ -54,7 +54,7 @@ export function calcTileType(index, boardSize) {
   return "center";
 }
 
-export function calcHealthLevel(health) {
+export const calcHealthLevel = (health) => {
   if (health < 15) {
     return "critical";
   }
@@ -185,4 +185,21 @@ export const determineCharacterTeam = (team1, team2, hoverCharacter) => {
     currentCharacterTeam = 1;
   }
   return currentCharacterTeam;
+};
+
+export const getTeamIndixes = (boardMatrix, gamePlay) => {
+  const matrix = boardMatrix;
+  const leftColumns = [gamePlay.boardSize - gamePlay.boardSize, gamePlay.boardSize - gamePlay.boardSize + 1];
+  const rightColumns = [gamePlay.boardSize - 2, gamePlay.boardSize - 1];
+  const leftIndexes = [];
+  const rightIndexes = [];
+  for (let [index, item] of Object.entries(matrix)) {
+    if (leftColumns.includes(item[1])) {
+      leftIndexes.push(Number(index));
+    }
+    if (rightColumns.includes(item[1])) {
+      rightIndexes.push(Number(index));
+    }
+  }
+  return [leftIndexes, rightIndexes];
 };

@@ -1,12 +1,7 @@
 import { determineValidAttacks, determineValidMoves } from "./utils";
 
 class Bot {
-  constructor() {
-  }
-
   makeMove = async(cellClick, state, boardMatrix, cellEnter, boardSize, cellLeave, removeCurrentCellStyle, cells) =>{
-    console.log("bot start");
-    
     let randomIndexCharacter = Math.floor(Math.random() * state.teams["2"].length);
     let character = state.teams["2"][randomIndexCharacter];
     while(character.position == -1 || character.character.health <= 0) {
@@ -14,11 +9,9 @@ class Bot {
       character = state.teams["2"][randomIndexCharacter];
     }
     const characterCoordinates = character.position;
-
     cellEnter(characterCoordinates);
     await cellClick(characterCoordinates); // выбрали персонажа
     cellLeave(characterCoordinates);
-    
     let validMoveCoords = determineValidMoves(character, null, boardMatrix, true);
     validMoveCoords = validMoveCoords.filter(item => item[0] >= 0 && item[0] < boardSize && item[1] >=0 && item[1] < boardSize);
     let randomMoveCoordIndex = Math.floor(Math.random() * validMoveCoords.length);
@@ -31,8 +24,6 @@ class Bot {
       randomMoveCoordPosition = randomMoveCoord[0] * (boardSize) + (randomMoveCoord[1]);
       characterCell = cells[randomMoveCoordPosition].children.length;
     }
-
-
     let validAttackCoords = determineValidAttacks(character, null, boardMatrix, true);
     validAttackCoords = validAttackCoords.filter(item => item[0] >= 0 && item[0] < boardSize && item[1] >=0 && item[1] < boardSize);
     let randomAttackCoordIndex = Math.floor(Math.random() * validAttackCoords.length);
@@ -40,7 +31,6 @@ class Bot {
     let randomAttackCoordPosition = randomAttackCoord[0] * (boardSize) + (randomAttackCoord[1]);
     let characterCellAttack = cells[randomAttackCoordPosition].children.length;
     let enemyCharacterCell = cells[randomAttackCoordPosition].children[0] && (cells[randomAttackCoordPosition].children[0].classList.contains("swordsman") || cells[randomAttackCoordPosition].children[0].classList.contains("bowman") || cells[randomAttackCoordPosition].children[0].classList.contains("magician"));
-
     let counter = 0;
     let found = false;
     while (characterCoordinates === randomAttackCoordPosition || randomAttackCoordPosition < 0 || !characterCellAttack || !enemyCharacterCell) {
@@ -57,24 +47,18 @@ class Bot {
         break;
       }
     }
-
     // attack
     if (found) {
       cellEnter(randomAttackCoordPosition);
       await cellClick(randomAttackCoordPosition); // выбрали персонажа
       cellLeave(randomAttackCoordPosition);
-      console.log("attacked");
-      console.log(randomAttackCoordPosition);
-      console.log(cells[randomAttackCoordPosition]);
       removeCurrentCellStyle(randomAttackCoordPosition);
-      console.log(cells[randomAttackCoordPosition]);
     } else {
       cellEnter(randomMoveCoordPosition);
       await cellClick(randomMoveCoordPosition); // выбрали персонажа
       cellLeave(randomMoveCoordPosition);
       removeCurrentCellStyle(randomMoveCoordPosition);
     }
-    console.log("bot end");
   };
 }
 

@@ -1,5 +1,4 @@
 import { calcHealthLevel, calcTileType, generateTooltip } from "./utils";
-import { generateTeam } from "./generators";
 
 export default class GamePlay {
   constructor() {
@@ -15,7 +14,7 @@ export default class GamePlay {
     this.loadGameListeners = [];
   }
 
-  bindToDOM(container) {
+  bindToDOM = (container) => {
     if (!(container instanceof HTMLElement)) {
       throw new Error("container is not HTMLElement");
     }
@@ -27,7 +26,7 @@ export default class GamePlay {
    *
    * @param theme
    */
-  drawUi(theme) {
+  drawUi = (theme) => {
     this.checkBinding();
 
     this.container.innerHTML = `
@@ -80,7 +79,7 @@ export default class GamePlay {
    *
    * @param positions array of PositionedCharacter objects
    */
-  redrawPositions(positions) {
+  redrawPositions = (positions) => {
     for (const cell of this.cells) {
       cell.innerHTML = "";
     }
@@ -111,7 +110,7 @@ export default class GamePlay {
    *
    * @param callback
    */
-  addCellEnterListener(callback) {
+  addCellEnterListener = (callback) => {
     this.cellEnterListeners.push(callback);
   }
 
@@ -120,7 +119,7 @@ export default class GamePlay {
    *
    * @param callback
    */
-  addCellLeaveListener(callback) {
+  addCellLeaveListener = (callback) => {
     this.cellLeaveListeners.push(callback);
   }
 
@@ -129,7 +128,7 @@ export default class GamePlay {
    *
    * @param callback
    */
-  addCellClickListener(callback) {
+  addCellClickListener = (callback) => {
     this.cellClickListeners.push(callback);
   }
 
@@ -138,7 +137,7 @@ export default class GamePlay {
    *
    * @param callback
    */
-  addNewGameListener(callback) {
+  addNewGameListener = (callback) => {
     this.newGameListeners.push(callback);
   }
 
@@ -147,7 +146,7 @@ export default class GamePlay {
    *
    * @param callback
    */
-  addSaveGameListener(callback) {
+  addSaveGameListener = (callback) => {
     this.saveGameListeners.push(callback);
   }
 
@@ -156,11 +155,11 @@ export default class GamePlay {
    *
    * @param callback
    */
-  addLoadGameListener(callback) {
+  addLoadGameListener = (callback) => {
     this.loadGameListeners.push(callback);
   }
 
-  onCellEnter(event) {
+  onCellEnter = (event) => {
     event.preventDefault();
 
     const index = this.cells.indexOf(event.currentTarget);
@@ -169,7 +168,7 @@ export default class GamePlay {
     this.cellEnterListeners.forEach(o => o.call(null, index, indexFrom));
   }
 
-  onCellLeave(event) {
+  onCellLeave = (event) => {
     event.preventDefault();
     // CUSTOM
     if (event.relatedTarget == this.tooltip) {
@@ -179,41 +178,41 @@ export default class GamePlay {
     this.cellLeaveListeners.forEach(o => o.call(null, index));
   }
 
-  onCellClick(event) {
+  onCellClick = (event) => {
     const index = this.cells.indexOf(event.currentTarget);
     this.cellClickListeners.forEach(o => o.call(null, index));
   }
 
-  onNewGameClick(event) {
+  onNewGameClick = (event) => {
     event.preventDefault();
     this.newGameListeners.forEach(o => o.call(null));
   }
 
-  onSaveGameClick(event) {
+  onSaveGameClick = (event) => {
     event.preventDefault();
     this.saveGameListeners.forEach(o => o.call(null));
   }
 
-  onLoadGameClick(event) {
+  onLoadGameClick = (event) => {
     event.preventDefault();
     this.loadGameListeners.forEach(o => o.call(null));
   }
 
-  static showError(message) {
+  static showError = (message) => {
     // alert(message);
     console.error(message);
   }
 
-  static showMessage(message) {
+  static showMessage = (message) => {
     console.warn(message);
   }
 
-  selectCell(index, color = "yellow") {
+  selectCell = (index, color = "yellow") => {
     this.deselectCell(index);
     this.cells[index].classList.add("selected", `selected-${color}`);
   }
 
-  deselectCell(index) {
+  deselectCell = (index) => {
     const cell = this.cells[index];
     cell.classList.remove(...Array.from(cell.classList)
       .filter(o => o.startsWith("selected")));
@@ -226,7 +225,7 @@ export default class GamePlay {
     this.tooltip.style.top = `${localY + 10}px`;
   };
 
-  showCellTooltip(message, index) {
+  showCellTooltip = (message, index) => {
     if (this.cells[index].querySelector(".character")) {
       this.tooltip.style.display = "block";
       
@@ -240,13 +239,13 @@ export default class GamePlay {
     this.tooltip.children[0].innerHTML = message;
   }
 
-  hideCellTooltip(index) {
+  hideCellTooltip = (index) => {
     this.tooltip.style.display = "none";
     this.cells[index].title = "";
     this.tooltip.children[0].innerHTML = "";
   }
   
-  showDamage(index, damage) {
+  showDamage = (index, damage) => {
     return new Promise((resolve) => {
       const cell = this.cells[index];
       const damageEl = document.createElement("span");
@@ -260,7 +259,7 @@ export default class GamePlay {
     });
   }
 
-  setCursor(cursor) {
+  setCursor = (cursor) => {
     this.boardEl.style.cursor = cursor;
   }
 
@@ -324,7 +323,7 @@ export default class GamePlay {
     }
   };
 
-  checkBinding() {
+  checkBinding = () => {
     if (this.container === null) {
       throw new Error("GamePlay not bind to DOM");
     }

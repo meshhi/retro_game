@@ -1,20 +1,11 @@
 import themes from "./themes";
-import { generateTeam } from "./generators";
+import { generatePositionedTeams } from "./generators";
 
-import { Bowman } from "./characters/Bowman.js";
-import { Magician } from "./characters/Magician.js";
-import { Swordsman } from "./characters/Swordsman.js";
-import { Daemon } from "./characters/Daemon.js";
-import { Undead } from "./characters/Undead.js";
-import { Vampire } from "./characters/Vampire.js";
-
-import PositionedCharacter from "./PositionedCharacter";
-import { generateMatrix, getCharacteristics, determineValidMoves, determineValidAttacks, determineCharacterTeam } from "./utils";
+import { generateMatrix, getCharacteristics, determineValidMoves, determineValidAttacks, determineCharacterTeam, getTeamIndixes } from "./utils";
 import GamePlay from "./GamePlay";
 import GameState from "./GameState";
 
 import cursors from "./cursors.js";
-
 
 export default class GameController {
   constructor(gamePlay, stateService, bot) {
@@ -27,70 +18,8 @@ export default class GameController {
   }
 
   initNewGame = () => {
-    const getTeamIndixes = () => {
-      const matrix = this.boardMatrix;
-      const leftColumns = [this.gamePlay.boardSize - this.gamePlay.boardSize, this.gamePlay.boardSize - this.gamePlay.boardSize + 1];
-      const rightColumns = [this.gamePlay.boardSize - 2, this.gamePlay.boardSize - 1];
-      const leftIndexes = [];
-      const rightIndexes = [];
-      for (let [index, item] of Object.entries(matrix)) {
-        if (leftColumns.includes(item[1])) {
-          leftIndexes.push(Number(index));
-        }
-
-        if (rightColumns.includes(item[1])) {
-          rightIndexes.push(Number(index));
-        }
-      }
-      return [leftIndexes, rightIndexes];
-    };
-    const [indexTeamA, indexTeamB] = getTeamIndixes();
-
-    const generatePositionedTeams = () => {
-      const teamA = generateTeam([Swordsman, Magician, Bowman], 4, 10).characters;
-      const teamB = generateTeam([Undead, Vampire, Daemon], 4, 10).characters;
-      // DEBUG
-      // for (let item of teamA) {
-      //   item.attack *= 1000;
-      // }
-      // for (let item of teamB) {
-      //   item.attack *= 1000;
-      // }
-
-      const busyIndexes = [];
-
-      const positionedTeamA = [];
-      for (let item of teamA) {
-        let currentIndex;
-        currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
-        if (busyIndexes.includes(currentIndex)) {
-            while(busyIndexes.includes(currentIndex)) {
-              currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
-            }
-        }
-        busyIndexes.push(currentIndex);
-        positionedTeamA.push(new PositionedCharacter(item, currentIndex));
-      }
-
-      const positionedTeamB = [];
-      for (let item of teamB) {
-        let currentIndex;
-        currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
-
-        if (busyIndexes.includes(currentIndex)) {
-          while(busyIndexes.includes(currentIndex)) {
-            currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
-
-          }
-        }
-        busyIndexes.push(currentIndex);
-        positionedTeamB.push(new PositionedCharacter(item, currentIndex));
-      }
-      
-      return [positionedTeamA, positionedTeamB];
-    };
-    const [teamA, teamB] = generatePositionedTeams();
-
+    const [indexTeamA, indexTeamB] = getTeamIndixes(this.boardMatrix, this.gamePlay);
+    const [teamA, teamB] = generatePositionedTeams(indexTeamA, indexTeamB);
     this.state.teams = {
       "1": teamA,
       "2": teamB
@@ -112,104 +41,51 @@ export default class GameController {
     }
   };
 
-  upgradeGameLevel = () => {
-    const getTeamIndixes = () => {
-      const matrix = this.boardMatrix;
-      const leftColumns = [this.gamePlay.boardSize - this.gamePlay.boardSize, this.gamePlay.boardSize - this.gamePlay.boardSize + 1];
-      const rightColumns = [this.gamePlay.boardSize - 2, this.gamePlay.boardSize - 1];
-      const leftIndexes = [];
-      const rightIndexes = [];
-      for (let [index, item] of Object.entries(matrix)) {
-        if (leftColumns.includes(item[1])) {
-          leftIndexes.push(Number(index));
-        }
+  updateStartPositions = () => {
+    const [indexTeamA, indexTeamB] = getTeamIndixes(this.boardMatrix, this.gamePlay);
+    const teamA = this.state.teams["1"];
+    const teamB = generatePositionedTeams(indexTeamA, indexTeamB)[1];
+    const busyIndexes = [];
 
-        if (rightColumns.includes(item[1])) {
-          rightIndexes.push(Number(index));
-        }
-      }
-      return [leftIndexes, rightIndexes];
-    };
-    const [indexTeamA, indexTeamB] = getTeamIndixes();
-
-    const updateStartPositions = () => {
-      const generatePositionedTeams = () => {
-        const teamA = generateTeam([Swordsman, Magician, Bowman], 4, 10).characters;
-        const teamB = generateTeam([Undead, Vampire, Daemon], 4, 10).characters;
-        const busyIndexes = [];
-  
-        const positionedTeamA = [];
-        for (let item of teamA) {
-          let currentIndex;
-          currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
-          if (busyIndexes.includes(currentIndex)) {
-              while(busyIndexes.includes(currentIndex)) {
-                currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
-              }
-          }
-          busyIndexes.push(currentIndex);
-          positionedTeamA.push(new PositionedCharacter(item, currentIndex));
-        }
-  
-        const positionedTeamB = [];
-        for (let item of teamB) {
-          let currentIndex;
-          currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
-  
-          if (busyIndexes.includes(currentIndex)) {
-            while(busyIndexes.includes(currentIndex)) {
-              currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
-  
-            }
-          }
-          busyIndexes.push(currentIndex);
-          positionedTeamB.push(new PositionedCharacter(item, currentIndex));
-        }
-        
-        return [positionedTeamA, positionedTeamB];
-      };
-      
-      const teamA = this.state.teams["1"];
-      const teamB = generatePositionedTeams()[1];
-      const busyIndexes = [];
-
-      for (let item of teamA) {
-        let currentIndex;
-        currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
-        if (busyIndexes.includes(currentIndex)) {
-            while(busyIndexes.includes(currentIndex)) {
-              currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
-            }
-        }
-        busyIndexes.push(currentIndex);
-        item.position = currentIndex;
-        if (item.character.health > 0) {
-          item.character.updateLevel();
-        }
-        if (item.character.health <= 0) {
-          item.position = -1;
-        }
-      }
-
-      for (let item of teamB) {
-        let currentIndex;
-        currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
-
-        if (busyIndexes.includes(currentIndex)) {
+    for (let item of teamA) {
+      let currentIndex;
+      currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
+      if (busyIndexes.includes(currentIndex)) {
           while(busyIndexes.includes(currentIndex)) {
-            currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
+            currentIndex = indexTeamA[Math.floor(Math.random() * indexTeamA.length)];
           }
-        }
-        busyIndexes.push(currentIndex);
-        item.position = currentIndex;
-        if (item.character.health > 0) {
-          item.character.updateLevel();
+      }
+      busyIndexes.push(currentIndex);
+      item.position = currentIndex;
+      if (item.character.health > 0) {
+        item.character.updateLevel();
+      }
+      if (item.character.health <= 0) {
+        item.position = -1;
+      }
+    }
+
+    for (let item of teamB) {
+      let currentIndex;
+      currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
+
+      if (busyIndexes.includes(currentIndex)) {
+        while(busyIndexes.includes(currentIndex)) {
+          currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
         }
       }
-      this.state.teams["2"] = teamB;
-    };
-    updateStartPositions();
+      busyIndexes.push(currentIndex);
+      item.position = currentIndex;
+      if (item.character.health > 0) {
+        item.character.updateLevel();
+      }
+    }
+    this.state.teams["2"] = teamB;
+  };
 
+  upgradeGameLevel = () => {
+    const [indexTeamA, indexTeamB] = getTeamIndixes(this.boardMatrix, this.gamePlay);
+    this.updateStartPositions();
     // update UI theme
     this.gamePlay.boardEl.classList.remove(this.state.themes.list[this.state.themes.current]);
     this.state.themes.current += 1;
@@ -230,7 +106,7 @@ export default class GameController {
     this.gamePlay.boardEl.style.pointerEvents = "none";
   };
 
-  init() {
+  init = () => {
     // TODO: add event listeners to gamePlay events
     // TODO: load saved stated from stateService
     this.state.themes.list = [];
@@ -256,7 +132,6 @@ export default class GameController {
 
   onCellClick = async (index) => {
     // TODO: react to click
-    console.log(this.state)
     const currentCellCharacter = [...this.state.teams["1"], ...this.state.teams["2"]].find(item => item.position === index);
     let cellCharacterTeam = -1;
     if (currentCellCharacter) {
@@ -337,31 +212,6 @@ export default class GameController {
             }
           }
         }
-
-        
-        // this.gamePlay.showDamage(index, damage)
-        //   .then(res => {
-        //     this.state.currentTurn.status = 'select';
-        //     this.state.currentTurn.player = this.state.currentTurn.player == 1 ? 0 : 1;
-        //     this.gamePlay.deselectCell(this.state.selectedIndex);
-        //     this.state.selectedIndex = null;
-        //     this.gamePlay.redrawPositions([...this.state.teams['1'].filter(item => item.character.health > 0), ...this.state.teams['2'].filter(item => item.character.health > 0)]);
-        //     if ([...this.state.teams['2'].filter(item => item.character.health > 0)].length === 0) {
-        //       this.upgradeGameLevel();
-        //     }
-        //     if ([...this.state.teams['1'].filter(item => item.character.health > 0)].length === 0) {
-        //       this.gameOver();
-        //     }
-        //     document.querySelector('body').style.pointerEvents = 'auto';
-
-        //     if (this.state.currentTurn.player == 1) {
-        //       if (this.state.currentTurn.status === "select") {
-        //         // BOT ATTACK
-        //         this.bot.makeMove(this.onCellClick, this.state, this.boardMatrix, this.onCellEnter, this.gamePlay.boardSize, this.onCellLeave, this.gamePlay.removeCurrentCellStyle);
-        //       }
-        //     }
-        //   });
-
           await this.gamePlay.showDamage(index, damage);
           this.state.currentTurn.status = "select";
           this.state.currentTurn.player = this.state.currentTurn.player == 1 ? 0 : 1;
