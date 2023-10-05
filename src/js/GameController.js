@@ -137,25 +137,26 @@ export default class GameController {
     if (currentCellCharacter) {
       cellCharacterTeam = determineCharacterTeam(this.state.teams["1"], this.state.teams["2"], currentCellCharacter);
     }
-    if (this.state.currentTurn.status === "select") {      
-      if (currentCellCharacter) {
-        if (this.state.selectedIndex) {
-          this.gamePlay.deselectCell(this.state.selectedIndex);
-          this.state.selectedIndex = index;
-        }
-        if (this.state.currentTurn.player == 0 && cellCharacterTeam == 0) {
-            this.gamePlay.selectCell(index);
-            this.state.selectedIndex = index;
-            this.state.currentTurn.status = "action";
-        }
-        if (this.state.currentTurn.player == 1 && cellCharacterTeam == 1) {
-            this.gamePlay.selectCell(index);
-            this.state.selectedIndex = index;
-            this.state.currentTurn.status = "action";
-        }
-      } else {
+    if (this.state.currentTurn.status === "select") {  
+      if (!currentCellCharacter) {
         GamePlay.showError("No character selected");
+        return
       }
+      if (this.state.selectedIndex) {
+        this.gamePlay.deselectCell(this.state.selectedIndex);
+        this.state.selectedIndex = index;
+      }
+      if (this.state.currentTurn.player == 0 && cellCharacterTeam == 0) {
+          this.gamePlay.selectCell(index);
+          this.state.selectedIndex = index;
+          this.state.currentTurn.status = "action";
+      }
+      if (this.state.currentTurn.player == 1 && cellCharacterTeam == 1) {
+          this.gamePlay.selectCell(index);
+          this.state.selectedIndex = index;
+          this.state.currentTurn.status = "action";
+      }
+      
     }
 
     if (this.state.currentTurn.status === "action") {
@@ -299,7 +300,6 @@ export default class GameController {
     if (this.state.selectedIndex) {
       this.gamePlay.selectCell(this.state.selectedIndex);
     }
-
     // update UI theme
     for (let item of this.state.themes.list) {
       try {

@@ -68,7 +68,6 @@ export const generatePositionedTeams = (indexTeamA, indexTeamB) => {
     if (busyIndexes.includes(currentIndex)) {
       while(busyIndexes.includes(currentIndex)) {
         currentIndex = indexTeamB[Math.floor(Math.random() * indexTeamB.length)];
-
       }
     }
     busyIndexes.push(currentIndex);
